@@ -33,10 +33,10 @@ $$
 GP核函数选择Matérn 5/2核，其表达式为：
 
 $$
-    k_{\text{M52}}(\bx, \bx') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
+    k_{\text{M52}}(\mathbf{x}, \mathbf{x}') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
 $$
 
-其中 $r = \|\bx - \bx'\|$ 为欧氏距离，$\sigma_f^2$ 为信号方差，$\ell$ 为长度尺度参数。选择Matérn 5/2核而非RBF核的原因在于：Matérn核仅要求目标函数一阶可微，更适合电力系统暂态稳定指标这种可能存在局部不可微点的物理量；而RBF核假设无穷阶可微，在边界附近可能产生过度光滑的预测。
+其中 $r = \|\mathbf{x} - \mathbf{x}'\|$ 为欧氏距离，$\sigma_f^2$ 为信号方差，$\ell$ 为长度尺度参数。选择Matérn 5/2核而非RBF核的原因在于：Matérn核仅要求目标函数一阶可微，更适合电力系统暂态稳定指标这种可能存在局部不可微点的物理量；而RBF核假设无穷阶可微，在边界附近可能产生过度光滑的预测。
 
 核函数的超参数 $(\sigma_f^2, \ell, \sigma_n^2)$ 通过最大化对数边际似然优化：
 

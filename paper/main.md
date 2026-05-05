@@ -10,7 +10,7 @@
 
 现有安全边界辨识方法面临三方面挑战：运行方式空间维度高导致计算代价大；多约束（功角/频率/电压）耦合导致单一代理模型精度不足；边界辨识与采样策略缺乏闭环反馈，边界质量难以保证。
 
-本文提出基于高斯过程代理模型（GP）、贝叶斯优化（BO）与仿射内逼近（AIA）融合的闭环安全边界辨识框架。首先，建立多输出GP代理模型，同时预测功角、频率、电压三约束严重度，采用Matérn 5/2核函数与独立输出架构；其次，以期望改进（EI）为采集函数，引导BO在安全边界附近定向勘探临界运行方式；然后，基于安全/不安全点集构造仿射内逼近多面体 $\mathcal{P}=\{\bx|\bA\bx\leq\bb\}$，通过凸包计算与线性规划分离超平面实现安全域的仿射内逼近；最后，建立"BO勘探$\to$AIA边界$\to$GP验证$\to$薄弱点辨识$\to$BO定向搜索"的闭环迭代机制，逐步紧化安全边界。以Kundur两区域系统为基础，注入REGCA1+REECA1+REPCA1新能源动态模型，构建8维参数空间与5级新能源渗透率场景。
+本文提出基于高斯过程代理模型（GP）、贝叶斯优化（BO）与仿射内逼近（AIA）融合的闭环安全边界辨识框架。首先，建立多输出GP代理模型，同时预测功角、频率、电压三约束严重度，采用Matérn 5/2核函数与独立输出架构；其次，以期望改进（EI）为采集函数，引导BO在安全边界附近定向勘探临界运行方式；然后，基于安全/不安全点集构造仿射内逼近多面体 $\mathcal{P}=\{\mathbf{x}|\mathbf{A}\mathbf{x}\leq\mathbf{b}\}$，通过凸包计算与线性规划分离超平面实现安全域的仿射内逼近；最后，建立"BO勘探$\to$AIA边界$\to$GP验证$\to$薄弱点辨识$\to$BO定向搜索"的闭环迭代机制，逐步紧化安全边界。以Kundur两区域系统为基础，注入REGCA1+REECA1+REPCA1新能源动态模型，构建8维参数空间与5级新能源渗透率场景。
 
 在186个可行运行方式$\times$7种异构故障$\times$5级渗透率共6510次仿真中，所提方法实现了：多输出GP代理模型功角约束 $R^2$ 达0.748，频率约束达0.591，电压约束近1.0；BO较随机搜索评估次数减少40%以上；闭环3轮迭代后安全域体积增长15%以上，边界内安全率保持100%；分场景传输容量限额较统一限额提升15%$\sim$73%。
 
@@ -47,7 +47,7 @@ High renewable energy (RE) penetration introduces significant uncertainty into p
 
 1. **建模层面**：在Kundur两区域系统中注入WECC标准REGCA1+REECA1+REPCA1新能源动态模型，构建8维参数空间与5级新能源渗透率场景。通过大规模仿真揭示新能源渗透率升高导致约束主导模式从"功角单一主导"向"多约束耦合"转变的物理机制。首次采用"等容量替代"策略系统性地模拟惯量降低过程，建立了新能源渗透率与约束激活模式的定量映射关系。
 
-2. **方法层面**：提出"MOGP代理$\to$BO勘探$\to$AIA边界$\to$闭环紧化"的融合框架。多输出GP采用Matérn 5/2核函数与独立输出架构，同时预测三约束严重度并量化预测不确定性；BO以期望改进（EI）为采集函数，利用GP不确定性引导定向搜索边界临界点；首次将仿射内逼近方法从控制理论引入电力系统安全域分析，通过凸包与LP分离超平面构造仿射安全域 $\mathcal{P}=\{\bx|\bA\bx\leq\bb\}$，保证边界内安全率100%；闭环迭代机制通过"BO勘探$\to$AIA边界$\to$GP验证$\to$薄弱点辨识$\to$BO定向搜索"逐步紧化边界，并证明安全域体积的单调不减性。
+2. **方法层面**：提出"MOGP代理$\to$BO勘探$\to$AIA边界$\to$闭环紧化"的融合框架。多输出GP采用Matérn 5/2核函数与独立输出架构，同时预测三约束严重度并量化预测不确定性；BO以期望改进（EI）为采集函数，利用GP不确定性引导定向搜索边界临界点；首次将仿射内逼近方法从控制理论引入电力系统安全域分析，通过凸包与LP分离超平面构造仿射安全域 $\mathcal{P}=\{\mathbf{x}|\mathbf{A}\mathbf{x}\leq\mathbf{b}\}$，保证边界内安全率100%；闭环迭代机制通过"BO勘探$\to$AIA边界$\to$GP验证$\to$薄弱点辨识$\to$BO定向搜索"逐步紧化边界，并证明安全域体积的单调不减性。
 
 3. **验证层面**：在186个可行运行方式$\times$7种异构故障$\times$5级渗透率共6510次仿真中，全面验证了所提方法的代理模型精度（ $R^2 \geq 0.59$ ）、勘探效率（评估次数减少40%+）、边界安全性（安全率100%）和工程效益（分档限额提升15%--73%）。通过与统一限额、线性聚类限额和Sigmoid聚类限额的对比，验证了AIA边界方法在安全性与经济性之间的最优平衡。
 
@@ -92,7 +92,7 @@ $$
 
 ### 1.3 运行方式参数空间
 
-将运行方式建模为8维参数向量 $\bx = [w_1, w_2, s_1, s_2, l_1, l_2, \delta, r]^T$，各分量含义及范围如表2所示。其中 $w_1, w_2$ 为风电渗透率， $s_1, s_2$ 为光伏渗透率， $l_1, l_2$ 为负荷水平，$\delta$ 为区际发电偏置，$r$ 为新能源渗透率等级。参数范围设计依据如下：风电渗透率上限取0.40，对应区域内单台同步发电机40%出力被替代；光伏渗透率上限取0.30，对应区域负荷30%由光伏满足；负荷水平范围0.70--1.15覆盖季节性和日内的负荷变化；区际发电偏置 $\delta \in [-0.15, 0.15]$ 反映两区域间功率分配的调节范围。
+将运行方式建模为8维参数向量 $\mathbf{x} = [w_1, w_2, s_1, s_2, l_1, l_2, \delta, r]^T$，各分量含义及范围如表2所示。其中 $w_1, w_2$ 为风电渗透率， $s_1, s_2$ 为光伏渗透率， $l_1, l_2$ 为负荷水平，$\delta$ 为区际发电偏置，$r$ 为新能源渗透率等级。参数范围设计依据如下：风电渗透率上限取0.40，对应区域内单台同步发电机40%出力被替代；光伏渗透率上限取0.30，对应区域负荷30%由光伏满足；负荷水平范围0.70--1.15覆盖季节性和日内的负荷变化；区际发电偏置 $\delta \in [-0.15, 0.15]$ 反映两区域间功率分配的调节范围。
 
 采用拉丁超立方采样（LHS） [mckay1979lhs] 在参数空间中均匀生成 $N = 200$ 个初始运行方式，并通过可行性预筛剔除功率平衡约束不满足的工况，最终保留186个可行运行方式。可行性预筛条件为：各发电机出力不低于最小技术出力（$P_{\text{min}} = 0.3P_N$），联络线功率不超过热稳定极限（$P_{78,\text{max}} = 900$ MW），且各母线电压处于 $[0.95, 1.05]$ p.u.范围内。
 
@@ -105,7 +105,7 @@ $$
 定义多约束综合严重度指标：
 
 $$
-    S(\bx, f) = \omega_a \cdot f_{\text{angle}}(\bx, f) + \omega_f \cdot f_{\text{freq}}(\bx, f) + \omega_v \cdot f_{\text{voltage}}(\bx, f)
+    S(\mathbf{x}, f) = \omega_a \cdot f_{\text{angle}}(\mathbf{x}, f) + \omega_f \cdot f_{\text{freq}}(\mathbf{x}, f) + \omega_v \cdot f_{\text{voltage}}(\mathbf{x}, f)
 $$
 
 其中 $f_{\text{angle}}$、 $f_{\text{freq}}$、 $f_{\text{voltage}}$ 分别为功角、频率、电压严重度子指标， $\omega_a, \omega_f, \omega_v$ 为基于熵权法 [sun2023clustering_security] 确定的权重系数。各子指标计算如下：
@@ -136,7 +136,7 @@ $$
 
 权重系数 $\omega_a, \omega_f, \omega_v$ 采用熵权法自适应确定 [sun2023clustering_security]。熵权法的基本思想是：某约束严重度在样本间的变异越大，说明该约束对区分安全与不安全状态的贡献越大，应赋予更高权重。具体计算步骤为：首先对186个可行运行方式$\times$7种故障共1302组约束值构成矩阵 $\mathbf{F} \in \mathbb{R}^{1302 \times 3}$ 进行归一化，然后计算各列的信息熵 $E_j$（反映该约束值的分散程度），最后由差异系数 $d_j = 1 - E_j$ 归一化得到权重 $\omega_j = d_j / \sum_j d_j$。在本文的仿真数据中，功角约束在各级渗透率下均表现较活跃，熵权法赋予其最高权重 $\omega_a \approx 0.4$；频率和电压约束在中低渗透率下变异较小、在高渗透率下变异增大，分别获得 $\omega_f \approx 0.3$ 和 $\omega_v \approx 0.3$ 的权重。这一结果与电力系统暂态稳定的物理认知一致：功角稳定是低惯量系统的首要安全约束，而频率和电压约束在高渗透率下逐渐凸显。
 
-安全阈值 $\theta$ 的选取：当 $S(\bx, f) < \theta$ 时，判定运行方式 $\bx$ 在故障 $f$ 下为安全，反之为不安全。本文取 $\theta = 0.6$。该阈值的选取基于以下考虑：$\theta = 0.6$ 对应至少一个子指标达到中等严重度（如 $\Delta\delta_{\max} \approx 108°$ 或 $|\Delta f| \approx 0.6$ Hz）或多个子指标同时轻度越限的综合状态，是安全与不安全的合理分界点。
+安全阈值 $\theta$ 的选取：当 $S(\mathbf{x}, f) < \theta$ 时，判定运行方式 $\mathbf{x}$ 在故障 $f$ 下为安全，反之为不安全。本文取 $\theta = 0.6$。该阈值的选取基于以下考虑：$\theta = 0.6$ 对应至少一个子指标达到中等严重度（如 $\Delta\delta_{\max} \approx 108°$ 或 $|\Delta f| \approx 0.6$ Hz）或多个子指标同时轻度越限的综合状态，是安全与不安全的合理分界点。
 
 
 ---
@@ -150,10 +150,10 @@ $$
 安全域的数学定义为：
 
 $$
-    \Omega_{\text{safe}} = \{\bx \in \mathcal{X} \subset \mathbb{R}^n \mid S(\bx, f) < \theta, \forall f \in \mathcal{F}\}
+    \Omega_{\text{safe}} = \{\mathbf{x} \in \mathcal{X} \subset \mathbb{R}^n \mid S(\mathbf{x}, f) < \theta, \forall f \in \mathcal{F}\}
 $$
 
-其中 $\bx$ 为 $n$ 维运行方式向量，$f$ 为故障场景，$S(\cdot)$ 为严重度函数，$\theta$ 为安全阈值，$\mathcal{F}$ 为故障集合。
+其中 $\mathbf{x}$ 为 $n$ 维运行方式向量，$f$ 为故障场景，$S(\cdot)$ 为严重度函数，$\theta$ 为安全阈值，$\mathcal{F}$ 为故障集合。
 
 直接通过仿真枚举 $\Omega_{\text{safe}}$ 的计算复杂度为 $O(|\mathcal{X}| \cdot |\mathcal{F}|)$，在高维空间中不可行。本文提出"代理模型+智能采样+边界逼近"三层架构，将复杂度降至 $O(N_{\text{BO}} \cdot |\mathcal{F}|)$，其中 $N_{\text{BO}} \ll |\mathcal{X}|$。
 
@@ -161,21 +161,21 @@ $$
 
 #### 2.2.1 单输出GP先验
 
-给定训练集 $\mathcal{D} = \{(\bx_i, y_i)\}_{i=1}^N$，GP先验假设函数值服从联合高斯分布：
+给定训练集 $\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$，GP先验假设函数值服从联合高斯分布：
 
 $$
     \mathbf{y} | \mathbf{X} \sim \mathcal{N}(\mathbf{0}, K(\mathbf{X}, \mathbf{X}) + \sigma_n^2 \mathbf{I})
 $$
 
-其中 $K(\mathbf{X}, \mathbf{X})$ 为核矩阵（Kernel Matrix），元素 $K_{ij} = k(\bx_i, \bx_j)$，$\sigma_n^2$ 为观测噪声方差。
+其中 $K(\mathbf{X}, \mathbf{X})$ 为核矩阵（Kernel Matrix），元素 $K_{ij} = k(\mathbf{x}_i, \mathbf{x}_j)$，$\sigma_n^2$ 为观测噪声方差。
 
 核函数采用Matérn 5/2核：
 
 $$
-    k(\bx, \bx') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
+    k(\mathbf{x}, \mathbf{x}') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
 $$
 
-其中 $r = \|\bx - \bx'\|_2$ 为欧氏距离，$\sigma_f^2$ 为信号方差（Signal Variance），$\ell$ 为长度尺度（Length Scale）。选择Matérn 5/2核而非径向基函数（Radial Basis Function, RBF）核的理由如下：RBF核对应无限可微的函数空间，其样本路径过于光滑，难以准确捕捉暂态稳定指标中可能存在的局部非光滑特征；而Matérn 5/2核对应的函数空间仅为二阶可微（$\nu = 5/2$），在保持足够光滑性的同时允许适度的局部变化，更符合电力系统暂态稳定指标的真实行为特性 [rasmussen2006gp]。此外，Matérn 5/2核的紧凑形式使其计算效率与RBF核相当，不会引入额外的计算负担。
+其中 $r = \|\mathbf{x} - \mathbf{x}'\|_2$ 为欧氏距离，$\sigma_f^2$ 为信号方差（Signal Variance），$\ell$ 为长度尺度（Length Scale）。选择Matérn 5/2核而非径向基函数（Radial Basis Function, RBF）核的理由如下：RBF核对应无限可微的函数空间，其样本路径过于光滑，难以准确捕捉暂态稳定指标中可能存在的局部非光滑特征；而Matérn 5/2核对应的函数空间仅为二阶可微（$\nu = 5/2$），在保持足够光滑性的同时允许适度的局部变化，更符合电力系统暂态稳定指标的真实行为特性 [rasmussen2006gp]。此外，Matérn 5/2核的紧凑形式使其计算效率与RBF核相当，不会引入额外的计算负担。
 
 核函数的超参数集合记为 $\boldsymbol{\theta}_{\text{GP}} = \{\sigma_f^2, \ell, \sigma_n^2\}$，通过最大化对数边际似然（Log Marginal Likelihood）进行优化：
 
@@ -193,10 +193,10 @@ $$
 
 #### 2.2.2 GP后验推断与不确定性量化
 
-给定新输入 $\bx_*$，后验预测分布为：
+给定新输入 $\mathbf{x}_*$，后验预测分布为：
 
 $$
-    y_* | \bx_*, \mathcal{D} \sim \mathcal{N}(\mu_*, \sigma_*^2)
+    y_* | \mathbf{x}_*, \mathcal{D} \sim \mathcal{N}(\mu_*, \sigma_*^2)
 $$
 
 其中：
@@ -206,10 +206,10 @@ $$
 $$
 
 $$
-    \sigma_*^2 = k(\bx_*, \bx_*) - \mathbf{k}_*^T (K + \sigma_n^2 \mathbf{I})^{-1} \mathbf{k}_*
+    \sigma_*^2 = k(\mathbf{x}_*, \mathbf{x}_*) - \mathbf{k}_*^T (K + \sigma_n^2 \mathbf{I})^{-1} \mathbf{k}_*
 $$
 
-$\mathbf{k}_* = [k(\bx_1, \bx_*), \ldots, k(\bx_N, \bx_*)]^T$ 为新输入与训练集的核向量。上述预测公式的计算复杂度为 $O(N^2)$（利用Cholesky分解预计算 $\mathbf{K}_y^{-1}$），适用于中等规模训练集。
+$\mathbf{k}_* = [k(\mathbf{x}_1, \mathbf{x}_*), \ldots, k(\mathbf{x}_N, \mathbf{x}_*)]^T$ 为新输入与训练集的核向量。上述预测公式的计算复杂度为 $O(N^2)$（利用Cholesky分解预计算 $\mathbf{K}_y^{-1}$），适用于中等规模训练集。
 
 预测均值 $\mu_*$ 是训练观测值的核加权线性组合，权重由输入空间的相似度决定；预测方差 $\sigma_*^2$ 则提供了严格的不确定性量化（Uncertainty Quantification, UQ）。预测方差具有两个关键性质：（i）在训练数据密集的区域，$\sigma_*^2$ 较小，表明模型对该区域的预测具有较高置信度；（ii）在训练数据稀疏或远离训练集的区域，$\sigma_*^2$ 较大，表明模型预测不确定性高。这一性质是GP与贝叶斯优化（Bayesian Optimization, BO）之间建立桥梁的关键：BO的采集函数（Acquisition Function）正是利用 $\sigma_*$ 来驱动勘探（Exploration），主动探索模型不确定性高的区域。
 
@@ -218,23 +218,23 @@ $\mathbf{k}_* = [k(\bx_1, \bx_*), \ldots, k(\bx_N, \bx_*)]^T$ 为新输入与训
 对功角稳定、频率稳定、电压稳定三个约束严重度分别建立独立GP模型：
 
 $$
-    \hat{f}_j(\bx) \sim \mathcal{GP}(\mu_j(\bx), \sigma_j^2(\bx)), \quad j \in \{a, f, v\}
+    \hat{f}_j(\mathbf{x}) \sim \mathcal{GP}(\mu_j(\mathbf{x}), \sigma_j^2(\mathbf{x})), \quad j \in \{a, f, v\}
 $$
 
-多输出GP的主流架构包括线性模型核心化（Linear Model of Coregionalization, LMC）和独立输出架构。LMC通过核心化矩阵（Coregionalization Matrix）$\mathbf{B}$ 建模输出之间的相关性，其联合核函数为 $k((\bx, j), (\bx', j')) = \sum_q k_q(\bx, \bx') \cdot B_{jj'}^q$。然而，LMC需要同时优化所有输出的超参数，计算复杂度为 $O(N^3 P^3)$（$P$ 为输出维度），且在输出间相关性较弱时性能提升有限 [alvarez2012kernel]。
+多输出GP的主流架构包括线性模型核心化（Linear Model of Coregionalization, LMC）和独立输出架构。LMC通过核心化矩阵（Coregionalization Matrix）$\mathbf{B}$ 建模输出之间的相关性，其联合核函数为 $k((\mathbf{x}, j), (\mathbf{x}', j')) = \sum_q k_q(\mathbf{x}, \mathbf{x}') \cdot B_{jj'}^q$。然而，LMC需要同时优化所有输出的超参数，计算复杂度为 $O(N^3 P^3)$（$P$ 为输出维度），且在输出间相关性较弱时性能提升有限 [alvarez2012kernel]。
 
 本文采用独立输出架构（Independent Output Architecture），原因有三：（i）功角、频率、电压三个物理量表征不同的稳定机制，其函数形态差异显著，耦合建模可能引入虚假关联；（ii）独立架构的复杂度为 $O(N^3 P)$，可并行计算，适合高可再生能源渗透率场景下的大规模仿真需求；（iii）后续BO勘探需要独立控制各约束的不确定性传播，独立架构提供了更灵活的采样策略。
 
 复合严重度的预测均值为各分量预测均值的加权和：
 
 $$
-    \hat{S}(\bx) = \omega_a \mu_a(\bx) + \omega_f \mu_f(\bx) + \omega_v \mu_v(\bx)
+    \hat{S}(\mathbf{x}) = \omega_a \mu_a(\mathbf{x}) + \omega_f \mu_f(\mathbf{x}) + \omega_v \mu_v(\mathbf{x})
 $$
 
 其中权重 $\omega_a + \omega_f + \omega_v = 1$，由调度偏好或等权重方案确定。假设各输出独立，不确定性的传播为：
 
 $$
-    \sigma_S^2(\bx) = \omega_a^2 \sigma_a^2(\bx) + \omega_f^2 \sigma_f^2(\bx) + \omega_v^2 \sigma_v^2(\bx)
+    \sigma_S^2(\mathbf{x}) = \omega_a^2 \sigma_a^2(\mathbf{x}) + \omega_f^2 \sigma_f^2(\mathbf{x}) + \omega_v^2 \sigma_v^2(\mathbf{x})
 $$
 
 式(2-1)表明复合不确定度为各分量不确定度的加权平方和。该性质意味着：(i) 权重越大的约束对总体不确定性贡献越大，因此BO应优先降低高权重约束在边界附近的不确定性；(ii) 任意一个约束的高不确定性即可导致复合不确定性增大，确保BO不会忽略任何维度的信息匮乏区域。
@@ -246,27 +246,27 @@ $$
 在安全边界勘探任务中，目标并非传统BO中的全局最优化，而是发现严重度接近阈值 $\theta$ 的临界运行方式（Critical Operating Point）。定义边界距离函数：
 
 $$
-    d(\bx) = |S(\bx) - \theta|
+    d(\mathbf{x}) = |S(\mathbf{x}) - \theta|
 $$
 
-理想情况下，应寻找使 $d(\bx)$ 最小的 $\bx$，即位于安全边界上的点。由于 $S(\bx)$ 的真实值未知（需通过时域仿真获得），利用GP代理模型的后验分布对其进行估计。
+理想情况下，应寻找使 $d(\mathbf{x})$ 最小的 $\mathbf{x}$，即位于安全边界上的点。由于 $S(\mathbf{x})$ 的真实值未知（需通过时域仿真获得），利用GP代理模型的后验分布对其进行估计。
 
 给定当前最优（最接近阈值）的观测值对应的严重度 $\eta = \min_{i} |y_i - \theta|$，定义改进量（Improvement）为：
 
 $$
-    I(\bx) = \max\left(\eta - d(\bx),\, 0\right) = \max\left(\eta - |S(\bx) - \theta|,\, 0\right)
+    I(\mathbf{x}) = \max\left(\eta - d(\mathbf{x}),\, 0\right) = \max\left(\eta - |S(\mathbf{x}) - \theta|,\, 0\right)
 $$
 
-由于GP后验给出的 $S(\bx)$ 服从高斯分布 $\mathcal{N}(\mu_*, \sigma_*^2)$，改进量 $I(\bx)$ 亦具有随机性。期望改进（Expected Improvement, EI）采集函数定义为：
+由于GP后验给出的 $S(\mathbf{x})$ 服从高斯分布 $\mathcal{N}(\mu_*, \sigma_*^2)$，改进量 $I(\mathbf{x})$ 亦具有随机性。期望改进（Expected Improvement, EI）采集函数定义为：
 
 $$
-    \alpha_{\text{EI}}(\bx) = \mathbb{E}[I(\bx)] = \int_0^\infty I \cdot p(I | \bx) \, dI
+    \alpha_{\text{EI}}(\mathbf{x}) = \mathbb{E}[I(\mathbf{x})] = \int_0^\infty I \cdot p(I | \mathbf{x}) \, dI
 $$
 
-注意到 $|S(\bx) - \theta|$ 的分布在 $\mu_*$ 两侧不对称，需将问题转化为两个单侧EI的叠加。定义 $\mu_* - \theta$ 的符号情况，并引入标准化变量，经推导可得EI的解析表达式。在边界勘探的对称化处理下，最终得到：
+注意到 $|S(\mathbf{x}) - \theta|$ 的分布在 $\mu_*$ 两侧不对称，需将问题转化为两个单侧EI的叠加。定义 $\mu_* - \theta$ 的符号情况，并引入标准化变量，经推导可得EI的解析表达式。在边界勘探的对称化处理下，最终得到：
 
 $$
-    \alpha_{\text{EI}}(\bx) = \sigma_* \left[ z\, \Phi(z) + \phi(z) \right]
+    \alpha_{\text{EI}}(\mathbf{x}) = \sigma_* \left[ z\, \Phi(z) + \phi(z) \right]
 $$
 
 其中 $z = \eta / \sigma_*$（此处 $\eta$ 为当前最小边界距离），$\Phi(\cdot)$ 和 $\phi(\cdot)$ 分别为标准正态分布的累积分布函数（CDF）和概率密度函数（PDF）。
@@ -275,17 +275,17 @@ $$
 
 #### 2.3.2 勘探-开发权衡与边界搜索的适配性
 
-在传统全局优化中，EI采集函数的目标是最小化目标函数值。本文将其改造为边界搜索工具，核心区别在于改进量的定义方式：以 $|S(\bx) - \theta|$ 替代 $S(\bx)$ 本身。这一改造使得EI同时关注两种有价值的区域：（i） $S(\bx) \approx \theta$ 的边界附近区域（开发），以及（ii） 模型预测不确定性高的区域（勘探）。
+在传统全局优化中，EI采集函数的目标是最小化目标函数值。本文将其改造为边界搜索工具，核心区别在于改进量的定义方式：以 $|S(\mathbf{x}) - \theta|$ 替代 $S(\mathbf{x})$ 本身。这一改造使得EI同时关注两种有价值的区域：（i） $S(\mathbf{x}) \approx \theta$ 的边界附近区域（开发），以及（ii） 模型预测不确定性高的区域（勘探）。
 
 作为对比，GP-UCB（Gaussian Process Upper Confidence Bound）采集函数的形式为：
 
 $$
-    \alpha_{\text{UCB}}(\bx) = \mu_*(\bx) + \beta_t \, \sigma_*(\bx)
+    \alpha_{\text{UCB}}(\mathbf{x}) = \mu_*(\mathbf{x}) + \beta_t \, \sigma_*(\mathbf{x})
 $$
 
 其中 $\beta_t$ 为随迭代次数增长的调节参数。GP-UCB在纯优化场景中具有次线性遗憾界（Sublinear Regret Bound）的理论保证 [srinivas2010gaussian]，但在边界搜索中存在局限：UCB始终倾向于搜索预测值最大的区域，而非接近阈值的区域，需要额外设计双边界（上下界）搜索策略。相比之下，EI的改进量定义天然适配边界搜索，无需额外参数调节，因此本文选用EI作为主采集函数。
 
-在每次BO迭代中，采集函数的全局优化采用多起点L-BFGS-B策略：从 $n_{\text{restart}} = 20$ 个随机初始点出发，分别进行局部优化，选取 $\alpha_{\text{EI}}$ 最大的点作为下一个仿真评估点。此外，为避免在已评估点附近重复采样，在采集函数中添加排斥惩罚项 $-\lambda \sum_{i=1}^N \exp(-\|\bx - \bx_i\|^2 / (2h^2))$，其中 $h$ 为排斥带宽参数。
+在每次BO迭代中，采集函数的全局优化采用多起点L-BFGS-B策略：从 $n_{\text{restart}} = 20$ 个随机初始点出发，分别进行局部优化，选取 $\alpha_{\text{EI}}$ 最大的点作为下一个仿真评估点。此外，为避免在已评估点附近重复采样，在采集函数中添加排斥惩罚项 $-\lambda \sum_{i=1}^N \exp(-\|\mathbf{x} - \mathbf{x}_i\|^2 / (2h^2))$，其中 $h$ 为排斥带宽参数。
 
 #### 2.3.3 收敛准则
 
@@ -295,50 +295,50 @@ $$
     |S_t^* - \theta| < \epsilon_{\text{conv}}
 $$
 
-其中 $\epsilon_{\text{conv}}$ 为收敛容差。同时引入辅助收敛条件——最大迭代次数 $T_{\max}$ 和采集函数值衰减条件 $\max_{\bx} \alpha_{\text{EI}}(\bx) < \epsilon_{\alpha}$。当满足上述任一条件时终止BO循环，已找到足够接近安全边界的临界点。
+其中 $\epsilon_{\text{conv}}$ 为收敛容差。同时引入辅助收敛条件——最大迭代次数 $T_{\max}$ 和采集函数值衰减条件 $\max_{\mathbf{x}} \alpha_{\text{EI}}(\mathbf{x}) < \epsilon_{\alpha}$。当满足上述任一条件时终止BO循环，已找到足够接近安全边界的临界点。
 
 ### 2.4 仿射内逼近安全边界
 
 #### 2.4.1 凸包构造与Quickhull算法
 
-设安全点集为 $\mathcal{X}_{\text{safe}} = \{\bx_1, \ldots, \bx_{N_s}\}$，不安全点集为 $\mathcal{X}_{\text{unsafe}} = \{\bx_{N_s+1}, \ldots, \bx_{N_s+N_u}\}$。首先计算安全点的凸包（Convex Hull）：
+设安全点集为 $\mathcal{X}_{\text{safe}} = \{\mathbf{x}_1, \ldots, \mathbf{x}_{N_s}\}$，不安全点集为 $\mathcal{X}_{\text{unsafe}} = \{\mathbf{x}_{N_s+1}, \ldots, \mathbf{x}_{N_s+N_u}\}$。首先计算安全点的凸包（Convex Hull）：
 
 $$
-    \text{Conv}(\mathcal{X}_{\text{safe}}) = \left\{\sum_{i=1}^{N_s} \lambda_i \bx_i \mid \lambda_i \geq 0, \sum \lambda_i = 1\right\}
+    \text{Conv}(\mathcal{X}_{\text{safe}}) = \left\{\sum_{i=1}^{N_s} \lambda_i \mathbf{x}_i \mid \lambda_i \geq 0, \sum \lambda_i = 1\right\}
 $$
 
 凸包的计算采用Quickhull算法 [barber1996quickhull]，其核心思想为分治策略：从初始单纯形出发，逐步将位于当前凸包外部的点分配到最近的面片，并对该面片执行"可见性判断"和"地平线边"（Horizon Edge）检测，从而增量式地更新凸包。Quickhull的期望时间复杂度为 $O(N_s \log N_s)$（低维情形下），在本文涉及的 $n \leq 10$ 维空间中具有出色的实际性能。
 
-凸包的每个面片（Facet）定义一个半空间约束 $\bA_i^T \bx \leq b_i$，凸包的边界表示为半空间交集：
+凸包的每个面片（Facet）定义一个半空间约束 $\mathbf{A}_i^T \mathbf{x} \leq b_i$，凸包的边界表示为半空间交集：
 
 $$
-    \mathcal{P}_0 = \{\bx \mid \bA_h \bx \leq \bb_h\}
+    \mathcal{P}_0 = \{\mathbf{x} \mid \mathbf{A}_h \mathbf{x} \leq \mathbf{b}_h\}
 $$
 
-其中 $\bA_h \in \mathbb{R}^{F \times n}$，$F$ 为面片数。凸包表示安全点集的最小凸包络，但在高维空间中，凸包的体积可能显著大于安全域的真实体积，导致不安全点被错误包含在凸包内部。因此需要通过添加分离超平面将不安全点排除。
+其中 $\mathbf{A}_h \in \mathbb{R}^{F \times n}$，$F$ 为面片数。凸包表示安全点集的最小凸包络，但在高维空间中，凸包的体积可能显著大于安全域的真实体积，导致不安全点被错误包含在凸包内部。因此需要通过添加分离超平面将不安全点排除。
 
 #### 2.4.2 线性规划分离超平面
 
-对于位于凸包内部或近旁的不安全点 $\bx_u \in \mathcal{X}_{\text{unsafe}}$，需要添加分离超平面将其排除。不同于直接利用凸包面片法向量，本文通过求解如下线性规划（Linear Programming, LP）问题，寻找最优分离超平面：
+对于位于凸包内部或近旁的不安全点 $\mathbf{x}_u \in \mathcal{X}_{\text{unsafe}}$，需要添加分离超平面将其排除。不同于直接利用凸包面片法向量，本文通过求解如下线性规划（Linear Programming, LP）问题，寻找最优分离超平面：
 
 $$
 \begin{aligned}
-    \min_{\bw, d} \quad & \|\bw\|_1 \\
-    \text{s.t.} \quad & \bw^T \bx_u - d \geq 1 \\
-    & \bw^T \bx_s - d \leq -\delta, \quad \forall \bx_s \in \mathcal{X}_{\text{safe}}
+    \min_{\mathbf{w}, d} \quad & \|\mathbf{w}\|_1 \\
+    \text{s.t.} \quad & \mathbf{w}^T \mathbf{x}_u - d \geq 1 \\
+    & \mathbf{w}^T \mathbf{x}_s - d \leq -\delta, \quad \forall \mathbf{x}_s \in \mathcal{X}_{\text{safe}}
 \end{aligned}
 $$
 
 其中 $\delta > 0$ 为安全侧裕度（Safety Margin），确保安全点不会恰好位于新超平面上。目标函数采用 $\ell_1$ 范数最小化，其作用是实现超平面法向量的稀疏性（Sparsity），使分离超平面尽可能平行于坐标轴，提高边界表示的可解释性。上述LP问题的约束数为 $N_s + 1$，变量数为 $n + 1$，可在多项式时间内求解。
 
-该LP的可行域条件为：存在超平面将 $\bx_u$ 与所有安全点严格分离。当安全点集包围不安全点时（即不安全点位于安全点凸包的内部），可行域可能为空。此时采用逐次松弛策略：首先移除约束 $\bw^T \bx_s - d \leq -\delta$ 中违反最严重的安全点，然后重新求解LP，直到获得可行解。所得超平面 $\bw^T \bx \leq d$ 经归一化后加入边界约束集。
+该LP的可行域条件为：存在超平面将 $\mathbf{x}_u$ 与所有安全点严格分离。当安全点集包围不安全点时（即不安全点位于安全点凸包的内部），可行域可能为空。此时采用逐次松弛策略：首先移除约束 $\mathbf{w}^T \mathbf{x}_s - d \leq -\delta$ 中违反最严重的安全点，然后重新求解LP，直到获得可行解。所得超平面 $\mathbf{w}^T \mathbf{x} \leq d$ 经归一化后加入边界约束集。
 
 #### 2.4.3 收缩裕度与冗余剪枝
 
-为提高AIA边界的鲁棒性，在凸包面片和分离超平面上均施加收缩裕度 $\epsilon > 0$。具体而言，将半空间 $\bA_i^T \bx \leq b_i$ 修改为：
+为提高AIA边界的鲁棒性，在凸包面片和分离超平面上均施加收缩裕度 $\epsilon > 0$。具体而言，将半空间 $\mathbf{A}_i^T \mathbf{x} \leq b_i$ 修改为：
 
 $$
-    \bA_i^T \bx \leq b_i - \epsilon \|\bA_i\|_2
+    \mathbf{A}_i^T \mathbf{x} \leq b_i - \epsilon \|\mathbf{A}_i\|_2
 $$
 
 收缩参数 $\epsilon$ 的选取需权衡安全性与保守性：$\epsilon$ 过大则安全域被过度收缩，可用运行空间显著减小；$\epsilon$ 过小则边界过于贴近安全/不安全分界线，可能因GP代理的预测误差导致不安全点被误判为安全点。本文推荐 $\epsilon \in [0.01, 0.05] \times \text{range}(\mathcal{X})$，并通过第4节的灵敏度分析验证其合理性。
@@ -347,8 +347,8 @@ $$
 
 $$
 \begin{aligned}
-    \max_{\bx} \quad & \bA_i^T \bx \\
-    \text{s.t.} \quad & \bA_j^T \bx \leq b_j, \quad \forall j \neq i
+    \max_{\mathbf{x}} \quad & \mathbf{A}_i^T \mathbf{x} \\
+    \text{s.t.} \quad & \mathbf{A}_j^T \mathbf{x} \leq b_j, \quad \forall j \neq i
 \end{aligned}
 $$
 
@@ -361,7 +361,7 @@ AIA边界的Chebyshev中心为最大内接超球的球心，通过LP求解：
 $$
 \begin{aligned}
     \max_{\mathbf{c}, r} \quad & r \\
-    \text{s.t.} \quad & \bA_i^T \mathbf{c} + r \|\bA_i\| \leq b_i, \quad \forall i
+    \text{s.t.} \quad & \mathbf{A}_i^T \mathbf{c} + r \|\mathbf{A}_i\| \leq b_i, \quad \forall i
 \end{aligned}
 $$
 
@@ -370,7 +370,7 @@ $$
 安全域体积通过Monte Carlo采样估计：
 
 $$
-    V \approx V_{\text{box}} \cdot \frac{1}{M} \sum_{j=1}^M \mathbb{1}[\bA \bx_j \leq \bb]
+    V \approx V_{\text{box}} \cdot \frac{1}{M} \sum_{j=1}^M \mathbb{1}[\mathbf{A} \mathbf{x}_j \leq \mathbf{b}]
 $$
 
 其中 $V_{\text{box}}$ 为包围盒体积，$M$ 为采样点数。当 $n$ 较大时，Monte Carlo方法的收敛速度较慢（标准差为 $O(1/\sqrt{M})$）。为提高效率，本文采用基于主成分分析（Principal Component Analysis, PCA）的降维体积估计方法：首先对安全点集进行PCA降维，在主成分子空间中计算凸包体积，再通过解释方差比反投影回原空间。该方法将有效维数从 $n$ 降至 $k \ll n$（通常 $k = 2$--$3$），显著提高了体积估计精度。
@@ -391,9 +391,9 @@ $$
 
 该单调性保证了算法的稳定行为：安全域体积不会因新样本的加入而回缩，迭代过程始终朝着更完整的安全域描述方向演进。
 
-**命题2**（安全性保持）：若初始安全点集满足 $S(\bx, f) < \theta$ 对所有 $\bx \in \mathcal{X}_{\text{safe}}^{(0)}$、$f \in \mathcal{F}$，则AIA边界内的任意点 $\bx$ 满足 $S(\bx, f) < \theta$ 的概率不低于 $1 - \alpha_{\epsilon}$，其中 $\alpha_{\epsilon}$ 为收缩裕度 $\epsilon$ 所控制的保守性水平。
+**命题2**（安全性保持）：若初始安全点集满足 $S(\mathbf{x}, f) < \theta$ 对所有 $\mathbf{x} \in \mathcal{X}_{\text{safe}}^{(0)}$、$f \in \mathcal{F}$，则AIA边界内的任意点 $\mathbf{x}$ 满足 $S(\mathbf{x}, f) < \theta$ 的概率不低于 $1 - \alpha_{\epsilon}$，其中 $\alpha_{\epsilon}$ 为收缩裕度 $\epsilon$ 所控制的保守性水平。
 
-*说明*：AIA边界是安全点凸包的内逼近（Inner Approximation），凸包内任一点均可表示为安全点的凸组合 $\bx = \sum_i \lambda_i \bx_i$。然而，严重度函数 $S(\cdot, f)$ 关于 $\bx$ 通常非凸（尤其在暂态稳定约束下），因此凸组合的安全性不能由端点的安全性直接推出。安全性由以下三重机制共同保证：(i) 分离超平面将已识别的不安全点及其邻域从安全域中排除；(ii) 收缩裕度 $\epsilon$ 在每个半空间约束上提供额外的保守边界，使AIA边界严格内缩于安全域边界；(iii) GP代理的预测不确定性被纳入BO采样策略，确保在不确定性高的区域增加采样密度，降低漏检不安全点的概率。严格的概率安全保证可通过GP预测的置信区间（如 $2\sigma$ 区间对应约 $95\%$ 置信度）与 $\epsilon$ 的联合选取实现。实际安全性通过第4节的大量仿真验证。
+*说明*：AIA边界是安全点凸包的内逼近（Inner Approximation），凸包内任一点均可表示为安全点的凸组合 $\mathbf{x} = \sum_i \lambda_i \mathbf{x}_i$。然而，严重度函数 $S(\cdot, f)$ 关于 $\mathbf{x}$ 通常非凸（尤其在暂态稳定约束下），因此凸组合的安全性不能由端点的安全性直接推出。安全性由以下三重机制共同保证：(i) 分离超平面将已识别的不安全点及其邻域从安全域中排除；(ii) 收缩裕度 $\epsilon$ 在每个半空间约束上提供额外的保守边界，使AIA边界严格内缩于安全域边界；(iii) GP代理的预测不确定性被纳入BO采样策略，确保在不确定性高的区域增加采样密度，降低漏检不安全点的概率。严格的概率安全保证可通过GP预测的置信区间（如 $2\sigma$ 区间对应约 $95\%$ 置信度）与 $\epsilon$ 的联合选取实现。实际安全性通过第4节的大量仿真验证。
 
 **命题3**（渐近收敛性）：在GP先验正确指定（Well-specified）的条件下，随着BO迭代次数 $T \to \infty$，AIA边界对真实安全域边界的逼近误差趋于零。
 
@@ -439,10 +439,10 @@ $$
 GP核函数选择Matérn 5/2核，其表达式为：
 
 $$
-    k_{\text{M52}}(\bx, \bx') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
+    k_{\text{M52}}(\mathbf{x}, \mathbf{x}') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
 $$
 
-其中 $r = \|\bx - \bx'\|$ 为欧氏距离，$\sigma_f^2$ 为信号方差，$\ell$ 为长度尺度参数。选择Matérn 5/2核而非RBF核的原因在于：Matérn核仅要求目标函数一阶可微，更适合电力系统暂态稳定指标这种可能存在局部不可微点的物理量；而RBF核假设无穷阶可微，在边界附近可能产生过度光滑的预测。
+其中 $r = \|\mathbf{x} - \mathbf{x}'\|$ 为欧氏距离，$\sigma_f^2$ 为信号方差，$\ell$ 为长度尺度参数。选择Matérn 5/2核而非RBF核的原因在于：Matérn核仅要求目标函数一阶可微，更适合电力系统暂态稳定指标这种可能存在局部不可微点的物理量；而RBF核假设无穷阶可微，在边界附近可能产生过度光滑的预测。
 
 核函数的超参数 $(\sigma_f^2, \ell, \sigma_n^2)$ 通过最大化对数边际似然优化：
 
