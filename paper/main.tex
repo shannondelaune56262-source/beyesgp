@@ -1,0 +1,59 @@
+\documentclass[a4paper,11pt]{ctexart}
+
+% Packages
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{threeparttable}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{subcaption}
+
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+% Custom commands
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bmu}{\boldsymbol{\mu}}
+\newcommand{\bSigma}{\boldsymbol{\Sigma}}
+
+\title{基于高斯过程与仿射内逼近的高比例新能源电网安全边界辨识}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+% === Abstract ===
+\input{sections/00_abstract}
+
+% === Section 0: Introduction ===
+\input{sections/01_introduction}
+
+% === Section 1: System Modeling ===
+\input{sections/02_system_modeling}
+
+% === Section 2: Theory and Analysis ===
+\input{sections/03_theory_analysis}
+
+% === Section 3: Parameter Design ===
+\input{sections/04_parameter_design}
+
+% === Section 4: Simulation Verification ===
+\input{sections/05_simulation}
+
+% === Section 5: Conclusion ===
+\input{sections/06_conclusion}
+
+% === References ===
+\bibliographystyle{GBT7714-2015}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,72 @@
+% 02_system_modeling.tex — 第1节 系统建模
+\section{系统建模}
+\label{sec:modeling}
+
+\subsection{Kundur两区域系统}
+
+本文采用Kundur两区域4机系统作为测试平台，该系统包含10条母线、4台GENROU同步发电机和15条输电线路，是暂态稳定研究的经典基准系统\cite{kundur1994power}。Area 1包含GENROU\_1（Bus 1，900 MVA）和GENROU\_2（Bus 2，900 MVA），Area 2包含GENROU\_3（Bus 3，900 MVA）和GENROU\_4（Bus 4，900 MVA）。两区域通过Bus 7--Bus 8间双回220 kV联络线互联。
+
+同步发电机采用6阶机电暂态模型，配备IEEE Type I励磁系统和TGOV1调速器。系统基准容量$S_B = 100$ MVA，仿真时长$T = 10$ s，步长$\Delta t = 0.02$ s。
+
+系统参数详见表\ref{tab:system_params}。
+
+\subsection{新能源动态模型}
+
+为模拟高比例新能源接入场景，在ANDES仿真平台\cite{li2023andes}中注入WECC标准新能源动态模型链：
+
+\begin{itemize}
+    \item \textbf{REGCA1}（可再生发电机电流源模型）：描述新能源设备的电流注入特性，采用恒功率因数控制模式（PFFLAG=1, QFLAG=0），模拟不具备电压支撑能力的恒功率型新能源设备
+    \item \textbf{REECA1}（可再生电气控制模型）：实现有功/无功控制逻辑，设置电流限值$Imax = 1.1$ p.u.，功率变化率限值$dPmax = 10$ p.u./s
+    \item \textbf{REPCA1}（可再生厂站控制模型）：提供厂站级功率参考指令，实现与电网的功率交换接口
+\end{itemize}
+
+新能源接入采用"等容量替代"建模策略：每台REGCA1的注入功率$P_{\text{RE}}$对应减少同区域同步发电机出力$\Delta P_G$，保持系统总有功功率平衡。该策略准确反映了新能源替代常规电源后系统惯量降低的物理特征\cite{liu2023inertia_re}。
+
+设新能源渗透率等级为$r \in \{0, 1, 2, 3, 4\}$，对应的同步发电机出力系数为：
+\begin{equation}
+    \alpha_k^{(r)} = \alpha_{k,0} - \Delta\alpha \cdot r, \quad k \in \{\text{Area1, Area2}\}
+    \label{eq:gen_factor}
+\end{equation}
+其中$\alpha_{k,0}$为无新能源时的基准出力系数，$\Delta\alpha$为每级渗透率对应的出力减少量。以Area 1为例，$r=0$时$\alpha_1 = 1.00$（全额出力），$r=4$时$\alpha_1 = 0.55$（替代45\%出力）。
+
+\subsection{运行方式参数空间}
+
+将运行方式建模为8维参数向量$\bx = [w_1, w_2, s_1, s_2, l_1, l_2, \delta, r]^T$，各分量含义及范围如表\ref{tab:mode_space}所示。其中$w_1, w_2$为风电渗透率，$s_1, s_2$为光伏渗透率，$l_1, l_2$为负荷水平，$\delta$为区际发电偏置，$r$为新能源渗透率等级。
+
+采用拉丁超立方采样（LHS）\cite{mckay1979lhs}在参数空间中均匀生成$N = 200$个初始运行方式，并通过可行性预筛剔除功率平衡约束不满足的工况，最终保留186个可行运行方式。
+
+\subsection{异构故障集}
+
+设计7种不同类型的故障场景（表\ref{tab:fault_set}），涵盖功角稳定（Bus 7/8三相短路）、电压稳定（Bus 9/10三相短路）、频率稳定（Bus 2/4发电机母线短路）和综合严重故障（Bus 7长清除时间），确保不同约束类型均被激活。
+
+\subsection{严重度指标}
+
+定义多约束综合严重度指标：
+\begin{equation}
+    S(\bx, f) = \omega_a \cdot f_{\text{angle}}(\bx, f) + \omega_f \cdot f_{\text{freq}}(\bx, f) + \omega_v \cdot f_{\text{voltage}}(\bx, f)
+    \label{eq:severity}
+\end{equation}
+其中$f_{\text{angle}}$、$f_{\text{freq}}$、$f_{\text{voltage}}$分别为功角、频率、电压严重度子指标，$\omega_a, \omega_f, \omega_v$为基于熵权法\cite{sun2023clustering_security}确定的权重系数。各子指标计算如下：
+
+功角严重度：
+\begin{equation}
+    f_{\text{angle}} = \min\left(1, \frac{\Delta\delta_{\max}}{180°}\right)
+    \label{eq:f_angle}
+\end{equation}
+其中$\Delta\delta_{\max}$为最大功角差。
+
+频率严重度：
+\begin{equation}
+    f_{\text{freq}} = \min\left(1, \frac{|\Delta f|_{\max}}{1.0 \text{ Hz}}\right)
+    \label{eq:f_freq}
+\end{equation}
+其中$|\Delta f|_{\max}$为最大频率偏差。
+
+电压严重度：
+\begin{equation}
+    f_{\text{voltage}} = 1 - \min(1, V_{\min})
+    \label{eq:f_voltage}
+\end{equation}
+其中$V_{\min}$为最低母线电压标幺值。
+
+安全阈值$\theta$的选取：当$S(\bx, f) < \theta$时，判定运行方式$\bx$在故障$f$下为安全，反之为不安全。本文取$\theta = 0.6$。

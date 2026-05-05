@@ -1,0 +1,97 @@
+<mxfile>
+  <diagram name="GP+BO+AIA Framework">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Title -->
+        <mxCell id="title" value="图2 GP+BO+AIA闭环融合框架&#xa;Fig.2 GP+BO+AIA Closed-loop Fusion Framework" style="text;html=1;align=center;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="250" y="10" width="400" height="40" as="geometry"/>
+        </mxCell>
+        <!-- Layer 1: GP -->
+        <mxCell id="gp_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;dashed=0" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="320" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="gp_title" value="第1层：多输出GP数字孪生&#xa;Layer 1: Multi-output GP Digital Twin" style="text;html=1;fontSize=11;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="60" y="65" width="280" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="gp_train" value="GP训练&#xa;Matérn 5/2核&#xa;5-fold CV" style="rounded=1;fillColor=#bbdaf7;strokeColor=#6c8ebf;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="gp_pred" value="GP预测&#xa;$\hat{S}(x)$+$\sigma(x)$&#xa;不确定性量化" style="rounded=1;fillColor=#bbdaf7;strokeColor=#6c8ebf;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="160" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="gp_validate" value="GP验证&#xa;安全率检查" style="rounded=1;fillColor=#bbdaf7;strokeColor=#6c8ebf;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="260" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="gp_outputs" value="输出：{angle}$, {freq}$, {voltage}$, $" style="text;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="80" y="170" width="240" height="20" as="geometry"/>
+        </mxCell>
+        <!-- Layer 2: BO -->
+        <mxCell id="bo_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="400" y="60" width="280" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="bo_title" value="第2层：BO智能勘探&#xa;Layer 2: BO Intelligent Exploration" style="text;html=1;fontSize=11;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="410" y="65" width="260" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="bo_ei" value="EI采集函数&#xa;$lpha(x)$" style="rounded=1;fillColor=#c3dbc3;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="420" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="bo_search" value="定向搜索&#xa;薄弱点邻域&#xa;{new}$候选" style="rounded=1;fillColor=#c3dbc3;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="520" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="bo_eval" value="ANDES仿真&#xa;评价新点" style="rounded=1;fillColor=#c3dbc3;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="620" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="bo_output" value="输出：边界临界点集 {boundary}$" style="text;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="430" y="170" width="220" height="20" as="geometry"/>
+        </mxCell>
+        <!-- Layer 3: AIA -->
+        <mxCell id="aia_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2" vertex="1" parent="1">
+          <mxGeometry x="720" y="60" width="280" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="aia_title" value="第3层：AIA安全边界&#xa;Layer 3: AIA Security Boundary" style="text;html=1;fontSize=11;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="730" y="65" width="260" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="aia_conv" value="安全点凸包&#xa;QuickHull" style="rounded=1;fillColor=#e6d8c3;strokeColor=#d6b656;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="740" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="aia_lp" value="LP分离超平面&#xa;收缩$\epsilon$" style="rounded=1;fillColor=#e6d8c3;strokeColor=#d6b656;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="840" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="aia_prune" value="冗余面剪枝&#xa;=\{x|Ax\leq b\}$" style="rounded=1;fillColor=#e6d8c3;strokeColor=#d6b656;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="940" y="100" width="80" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="aia_output" value="输出：仿射安全域 + 传输限额" style="text;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="750" y="170" width="220" height="20" as="geometry"/>
+        </mxCell>
+        <!-- Closed loop arrows -->
+        <mxCell id="arrow1" value="GP预测+不确定性" style="endArrow=block;html=1;strokeColor=#2196F3;strokeWidth=2;fontSize=9;fontStyle=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="160" as="sourcePoint"/>
+            <mxPoint x="400" y="160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow2" value="边界临界点" style="endArrow=block;html=1;strokeColor=#4CAF50;strokeWidth=2;fontSize=9;fontStyle=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="680" y="160" as="sourcePoint"/>
+            <mxPoint x="720" y="160" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow3" value="薄弱点反馈" style="endArrow=block;html=1;strokeColor=#F44336;strokeWidth=2;curved=1;fontSize=9;fontStyle=1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="860" y="260" as="sourcePoint"/>
+            <mxPoint x="200" y="260" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <!-- Input/Output -->
+        <mxCell id="input" value="输入：运行方式X&#xa;+ 故障集F + 阈值θ" style="shape=parallelogram;fillColor=#f5f5f5;strokeColor=#666666;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="100" y="290" width="180" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="output" value="输出：分场景AIA边界&#xa;+ 传输容量限额" style="shape=parallelogram;fillColor=#f5f5f5;strokeColor=#666666;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="750" y="290" width="180" height="40" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

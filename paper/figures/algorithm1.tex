@@ -1,0 +1,28 @@
+% Algorithm 1: GP+BO+AIA Closed-loop Refinement
+\begin{algorithm}[htbp]
+\caption{GP+BO+AIA闭环融合安全边界辨识算法}
+\label{alg:closed_loop}
+\begin{algorithmic}[1]
+\REQUIRE 运行方式参数空间 $\mathcal{X}$，故障集 $\mathcal{F}$，严重度阈值 $\theta$，迭代轮数 $R$
+\ENSURE 分场景AIA安全边界 $\mathcal{P}_{f,k} = \{\mathbf{x} | \mathbf{A}\mathbf{x} \leq \mathbf{b}\}$
+\STATE \textbf{初始化：}通过LHS在$\mathcal{X}$中生成$N_0$个初始样本
+\STATE 对每个样本$\mathbf{x}_i$和每个故障$f_j$，执行ANDES仿真，计算严重度$S(\mathbf{x}_i, f_j)$
+\STATE 基于运行特征对样本进行$K$-means聚类，将样本分为$K$组
+\FOR{每个场景$(f_j, k)$，$j=1,\ldots,|\mathcal{F}|$，$k=1,\ldots,K$}
+    \STATE 划分安全集$\mathcal{X}_{\text{safe}} = \{\mathbf{x} | S(\mathbf{x}, f_j) < \theta\}$和不安全集$\mathcal{X}_{\text{unsafe}}$
+    \STATE 计算初始AIA边界$\mathcal{P}$：凸包$\to$LP分离超平面$\to$收缩$\to$剪枝
+\ENDFOR
+\STATE 训练多输出GP代理模型$\hat{S}(\mathbf{x}, f)$，同时预测$f_{\text{angle}}, f_{\text{freq}}, f_{\text{voltage}}$
+\FOR{$r = 1, \ldots, R$}
+    \FOR{每个场景$(f_j, k)$}
+        \STATE 寻找边界薄弱点：$\mathbf{x}_{\text{weak}} = \arg\min_{\mathbf{x} \in \mathcal{X}_{\text{safe}}} \text{margin}(\mathbf{x}, \mathcal{P})$
+        \STATE 基于GP代理$\hat{S}$，在$\mathbf{x}_{\text{weak}}$附近执行BO定向搜索，获取$N_{\text{new}}$个新点
+        \STATE 通过ANDES仿真评价新点，更新$\mathcal{X}_{\text{safe}}$和$\mathcal{X}_{\text{unsafe}}$
+        \STATE 重新计算AIA边界$\mathcal{P}$
+    \ENDFOR
+    \STATE 重新训练GP代理模型$\hat{S}$
+    \STATE 记录第$r$轮安全域体积$V^{(r)}$和安全率
+\ENDFOR
+\RETURN 分场景安全边界$\{\mathcal{P}_{f,k}\}$及对应传输容量限额
+\end{algorithmic}
+\end{algorithm}

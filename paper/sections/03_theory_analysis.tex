@@ -1,0 +1,158 @@
+% 03_theory_analysis.tex — 第2节 理论分析（核心章节，25-35%）
+\section{理论分析}
+\label{sec:theory}
+
+本节依次阐述多输出高斯过程代理模型（2.2节）、贝叶斯优化临界点勘探（2.3节）、仿射内逼近安全边界（2.4节）和闭环融合框架（2.5节）的数学基础，构建完整的方法论体系。
+
+\subsection{问题定义}
+\label{subsec:problem}
+
+安全域的数学定义为：
+\begin{equation}
+    \Omega_{\text{safe}} = \{\bx \in \mathcal{X} \subset \mathbb{R}^n \mid S(\bx, f) < \theta, \forall f \in \mathcal{F}\}
+    \label{eq:safe_set}
+\end{equation}
+其中$\bx$为$n$维运行方式向量，$f$为故障场景，$S(\cdot)$为严重度函数，$\theta$为安全阈值，$\mathcal{F}$为故障集合。
+
+直接通过仿真枚举$\Omega_{\text{safe}}$的计算复杂度为$O(|\mathcal{X}| \cdot |\mathcal{F}|)$，在高维空间中不可行。本文提出"代理模型+智能采样+边界逼近"三层架构，将复杂度降至$O(N_{\text{BO}} \cdot |\mathcal{F}|)$，其中$N_{\text{BO}} \ll |\mathcal{X}|$。
+
+\subsection{多输出高斯过程代理模型}
+\label{subsec:mogp}
+
+\subsubsection{单输出GP先验}
+
+给定训练集$\mathcal{D} = \{(\bx_i, y_i)\}_{i=1}^N$，GP先验假设函数值服从联合高斯分布：
+\begin{equation}
+    \mathbf{y} | \mathbf{X} \sim \mathcal{N}(\mathbf{0}, K(\mathbf{X}, \mathbf{X}) + \sigma_n^2 \mathbf{I})
+    \label{eq:gp_prior}
+\end{equation}
+其中$K(\mathbf{X}, \mathbf{X})$为核矩阵，元素$K_{ij} = k(\bx_i, \bx_j)$，$\sigma_n^2$为观测噪声方差。
+
+核函数采用Matérn 5/2核：
+\begin{equation}
+    k(\bx, \bx') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
+    \label{eq:matern}
+\end{equation}
+其中$r = \|\bx - \bx'\|_2$为欧氏距离，$\sigma_f^2$为信号方差，$\ell$为长度尺度。Matérn 5/2核兼具光滑性和局部性，适合暂态稳定指标的建模\cite{wang2023gp_transient}。
+
+\subsubsection{GP后验推断}
+
+给定新输入$\bx_*$，后验预测分布为：
+\begin{equation}
+    y_* | \bx_*, \mathcal{D} \sim \mathcal{N}(\mu_*, \sigma_*^2)
+    \label{eq:gp_posterior}
+\end{equation}
+其中：
+\begin{align}
+    \mu_* &= \mathbf{k}_*^T (K + \sigma_n^2 \mathbf{I})^{-1} \mathbf{y} \label{eq:gp_mean} \\
+    \sigma_*^2 &= k(\bx_*, \bx_*) - \mathbf{k}_*^T (K + \sigma_n^2 \mathbf{I})^{-1} \mathbf{k}_* \label{eq:gp_var}
+\end{align}
+$\mathbf{k}_* = [k(\bx_1, \bx_*), \ldots, k(\bx_N, \bx_*)]^T$为新输入与训练集的核向量。式(\ref{eq:gp_mean})揭示了GP的核心优势：预测均值$\mu_*$是训练观测值的线性组合，权重由核函数确定的相似度决定；式(\ref{eq:gp_var})则提供了预测的不确定性量化。
+
+\subsubsection{多输出独立架构}
+
+对功角、频率、电压三个约束严重度分别建立独立GP模型：
+\begin{equation}
+    \hat{f}_j(\bx) \sim \mathcal{GP}(\mu_j(\bx), \sigma_j^2(\bx)), \quad j \in \{a, f, v\}
+    \label{eq:mogp}
+\end{equation}
+
+复合严重度的预测均值为：
+\begin{equation}
+    \hat{S}(\bx) = \omega_a \mu_a(\bx) + \omega_f \mu_f(\bx) + \omega_v \mu_v(\bx)
+    \label{eq:composite_mean}
+\end{equation}
+
+假设各输出独立，不确定性的传播为：
+\begin{equation}
+    \sigma_S^2(\bx) = \omega_a^2 \sigma_a^2(\bx) + \omega_f^2 \sigma_f^2(\bx) + \omega_v^2 \sigma_v^2(\bx)
+    \label{eq:composite_var}
+\end{equation}
+式(\ref{eq:composite_var})表明复合不确定度为各分量不确定度的加权平方和，权重越大则该约束对总体不确定性贡献越大。
+
+\subsection{贝叶斯优化临界点勘探}
+\label{subsec:bo}
+
+\subsubsection{期望改进采集函数}
+
+在安全边界勘探任务中，目标是发现严重度接近阈值$\theta$的临界运行方式。定义改进量为：
+\begin{equation}
+    I(\bx) = |\hat{S}(\bx) - \theta|
+    \label{eq:improvement}
+\end{equation}
+期望改进（Expected Improvement, EI）为：
+\begin{equation}
+    \alpha_{\text{EI}}(\bx) = \mathbb{E}[I(\bx)] = \int_0^\infty I \cdot p(I | \bx) \, dI
+    \label{eq:ei}
+\end{equation}
+利用GP后验的高斯性，EI具有解析解：
+\begin{equation}
+    \alpha_{\text{EI}}(\bx) = (\mu^* - \theta)\Phi(z) + \sigma_* \phi(z)
+    \label{eq:ei_analytic}
+\end{equation}
+其中$z = (\mu^* - \theta)/\sigma_*$，$\Phi(\cdot)$和$\phi(\cdot)$分别为标准正态CDF和PDF。
+
+\subsubsection{收敛准则}
+
+设第$t$次BO迭代后，当前最优（最接近阈值的点）严重度为$S_t^*$，定义收敛准则：
+\begin{equation}
+    |S_t^* - \theta| < \epsilon_{\text{conv}}
+    \label{eq:convergence}
+\end{equation}
+其中$\epsilon_{\text{conv}}$为收敛容差。当满足式(\ref{eq:convergence})时，已找到足够接近安全边界的临界点。
+
+\subsection{仿射内逼近安全边界}
+\label{subsec:aia}
+
+\subsubsection{凸包构造}
+
+设安全点集为$\mathcal{X}_{\text{safe}} = \{\bx_1, \ldots, \bx_{N_s}\}$，不安全点集为$\mathcal{X}_{\text{unsafe}} = \{\bx_{N_s+1}, \ldots, \bx_{N_s+N_u}\}$。首先计算安全点的凸包：
+\begin{equation}
+    \text{Conv}(\mathcal{X}_{\text{safe}}) = \left\{\sum_{i=1}^{N_s} \lambda_i \bx_i \mid \lambda_i \geq 0, \sum \lambda_i = 1\right\}
+    \label{eq:convex_hull}
+\end{equation}
+凸包的每个面片定义一个半空间约束$\bA_i \bx \leq b_i$，凸包的边界表示为$\{\bx | \bA_h \bx \leq \bb_h\}$。
+
+\subsubsection{分离超平面}
+
+对于位于凸包内部或近旁的不安全点$\bx_u \in \mathcal{X}_{\text{unsafe}}$，需要添加分离超平面将其排除。通过求解如下线性规划：
+\begin{equation}
+    \begin{aligned}
+        \min_{\bw, d} \quad & \|\bw\|_1 \\
+        \text{s.t.} \quad & \bw^T \bx_u - d \geq 1 \\
+        & \bw^T \bx_s - d \leq -\delta, \quad \forall \bx_s \in \mathcal{X}_{\text{safe}}
+    \end{aligned}
+    \label{eq:separating_hp}
+\end{equation}
+其中$\delta > 0$为安全侧裕度，确保安全点不会位于新超平面上。所得超平面$\bw^T \bx \leq d$经归一化后加入边界约束集。
+
+\subsubsection{Chebyshev中心与体积估计}
+
+AIA边界的Chebyshev中心为最大内接球的圆心，通过LP求解：
+\begin{equation}
+    \begin{aligned}
+        \max_{\mathbf{c}, r} \quad & r \\
+        \text{s.t.} \quad & \bA_i^T \mathbf{c} + r \|\bA_i\| \leq b_i, \quad \forall i
+    \end{aligned}
+    \label{eq:chebyshev}
+\end{equation}
+其中$\mathbf{c}$为球心，$r$为半径。式(\ref{eq:chebyshev})的物理意义为：在安全域内寻找最大球形邻域，其半径$r$反映了安全裕度的大小。
+
+安全域体积通过Monte Carlo采样估计：
+\begin{equation}
+    V \approx V_{\text{box}} \cdot \frac{1}{M} \sum_{j=1}^M \mathbb{1}[\bA \bx_j \leq \bb]
+    \label{eq:volume}
+\end{equation}
+
+\subsection{闭环融合框架}
+\label{subsec:closed_loop}
+
+将GP代理、BO勘探和AIA边界构造整合为闭环迭代框架（算法\ref{alg:closed_loop}），其收敛性基于以下条件：
+
+\textbf{命题1}（单调性）：每轮迭代后，安全域体积$V^{(r)}$单调不减，即$V^{(r+1)} \geq V^{(r)}$。
+
+\textit{证明}：第$r+1$轮添加的新安全点集$\mathcal{X}_{\text{safe}}^{(r+1)} \supseteq \mathcal{X}_{\text{safe}}^{(r)}$，凸包的体积关于点集单调递增\cite{boyd2004convex}，故AIA边界的体积单调不减。
+
+\textbf{命题2}（安全性）：若初始安全点集满足$S(\bx, f) < \theta$对所有$\bx \in \mathcal{X}_{\text{safe}}^{(0)}$，则AIA边界内所有点满足$S(\bx, f) < \theta$。
+
+\textit{说明}：AIA边界是安全点凸包的内逼近，凸包内任一点均可表示为安全点的凸组合，但严重度函数$S(\cdot)$通常非凸。安全性由以下两点保证：(i) 分离超平面将不安全点排除；(ii) 收缩裕度$\epsilon$提供额外保守性。实际安全性通过仿真验证（见第\ref{sec:simulation}节）。

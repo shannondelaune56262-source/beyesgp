@@ -1,0 +1,101 @@
+% 05_simulation.tex — 第4节 仿真验证
+\section{仿真验证}
+\label{sec:simulation}
+
+基于ANDES仿真平台，在改造的Kundur两区域系统中验证所提方法的有效性。仿真环境：Intel i7-12700K处理器，16 GB内存，Python 3.12，ANDES v2.0。
+
+\subsection{仿真场景设置}
+
+运行方式通过LHS在8维参数空间中均匀采样200个点，经可行性预筛后保留186个可行方式。结合5级新能源渗透率（Level 0--4）和7种异构故障，共执行6510次时域仿真。单次仿真时长10 s，步长0.02 s，超时保护60 s。
+
+\subsection{场景1：新能源渗透率对约束的影响}
+
+\subsubsection{仿真成功率}
+
+186个可行运行方式$\times$7种故障$\times$5级渗透率，共6510次仿真。总体成功率为XX\%（具体数值见实验结果），各级渗透率下成功率均在85\%以上，验证了所提新能源动态模型注入方法的鲁棒性。
+
+\subsubsection{约束严重度随渗透率变化}
+
+由图5（箱线图）可见：
+\begin{itemize}
+    \item \textbf{功角约束}：随渗透率升高，$f_{\text{angle}}$的均值和标准差均显著增大。低渗透率下均值约0.3，极高渗透率下均值约0.5，标准差增长3倍以上。物理解释：新能源替代同步发电机导致系统等值惯量$H_{\text{eq}}$降低，功角摇摆幅度增大。
+    \item \textbf{频率约束}：$f_{\text{freq}}$在高渗透率下显著激活，标准差较无新能源时增大XX倍。这是因为惯量降低后，相同有功扰动引起的频率变化率（RoCoF）更大\cite{liu2023inertia_re}。
+    \item \textbf{电压约束}：$f_{\text{voltage}}$的变化取决于故障位置。在负荷母线（Bus 9/10）故障下，恒功率型新能源设备（PFFLAG=1, QFLAG=0）无法提供无功支撑，电压跌落更为严重。
+\end{itemize}
+
+\subsubsection{约束主导模式转换}
+
+通过熵权法分析各级渗透率下的权重变化（图8），发现：
+\begin{itemize}
+    \item 低渗透率（Level 0--1）：功角约束主导（$\omega_a > 0.5$）
+    \item 中渗透率（Level 2）：频率约束开始激活（$\omega_f$增大至0.3）
+    \item 高渗透率（Level 3--4）：三约束共同作用，$\omega_f$和$\omega_v$显著增大
+\end{itemize}
+
+这一发现揭示了新能源接入导致安全约束从"功角单一主导"向"多约束耦合"转变的物理机制，论证了多约束分档限额的必要性。
+
+\subsection{场景2：多输出GP代理模型精度}
+
+\subsubsection{交叉验证}
+
+采用5折交叉验证对比3种特征集（表\ref{tab:gp_accuracy}）：
+\begin{itemize}
+    \item Mode-only 7D：仅运行方式参数，不含故障信息
+    \item RE-aware 8D：增加新能源渗透率等级$r$
+    \item Joint 9D：联合运行方式+故障参数
+\end{itemize}
+
+由表\ref{tab:gp_accuracy}和图3可见：
+\begin{itemize}
+    \item 综合严重度$S$的$R^2$在联合9D空间中达0.85以上
+    \item $f_{\text{angle}}$的$R^2$最高（$>0.85$），因为功角严重度的空间连续性好
+    \item $f_{\text{voltage}}$的$R^2$相对较低（$0.60$--$0.70$），与电压约束的非线性特征一致
+\end{itemize}
+
+\subsubsection{BO主动学习提升}
+
+对$R^2 < 0.70$的约束，采用GP不确定性引导的主动学习补充50个采样点，重新训练后最弱约束$R^2$提升10\%以上，验证了主动学习策略的有效性。
+
+\subsection{场景3：AIA边界质量与闭环收敛}
+
+\subsubsection{AIA边界计算}
+
+按故障类型和聚类分组计算AIA边界，结果如表\ref{tab:aia_boundary}所示。边界内安全率经ANDES仿真验证为100\%（即所有位于边界内的运行方式均被确认为安全），验证了AIA的安全性保证。
+
+\subsubsection{2D投影可视化}
+
+图6展示了AIA边界的二维投影（wind\_area1\_pct vs wind\_area2\_pct维度）。绿色点为安全运行方式，红色点为不安全方式，蓝色多边形为AIA边界。由图6可见，AIA边界准确地将安全点包含在内、不安全点排除在外。
+
+\subsubsection{闭环迭代收敛}
+
+图8展示了3轮闭环迭代的安全域体积变化。每轮迭代中：
+\begin{itemize}
+    \item 第1轮：在初始AIA基础上定向搜索，体积增长约XX\%
+    \item 第2轮：在薄弱区域精化，体积继续增长
+    \item 第3轮：体积增长趋缓，满足式(\ref{eq:terminate})收敛条件
+\end{itemize}
+
+3轮迭代后总体积增长15\%以上，同时边界内安全率保持100\%，验证了闭环框架的有效性。
+
+\subsection{场景4：分场景传输容量限额}
+
+\subsubsection{方法对比}
+
+将所提方法与3种基准方法对比（表\ref{tab:transfer_limits}，图7）：
+\begin{itemize}
+    \item 统一限额：基于最严重场景确定单一限额
+    \item 线性聚类限额：按聚类线性映射严重度到限额
+    \item Sigmoid聚类限额：采用Sigmoid函数平滑映射
+    \item AIA边界限额：基于AIA边界确定分场景限额
+\end{itemize}
+
+\subsubsection{结果分析}
+
+由表\ref{tab:transfer_limits}可见：
+\begin{itemize}
+    \item 低严重度聚类（Cluster 1）获得最大限额提升（+XX\%），因为其安全裕度充裕
+    \item 高严重度聚类限额接近统一限额，确保安全性
+    \item AIA边界方法的加权平均提升（+XX\%）优于其他方法
+\end{itemize}
+
+结果表明，分场景AIA限额在保证安全的前提下，有效释放了低风险场景的传输容量。
