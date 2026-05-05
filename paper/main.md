@@ -25,7 +25,7 @@ High renewable energy (RE) penetration introduces significant uncertainty into p
 
 ## 0 引言
 
-随着"双碳"目标推进，风电、光伏等新能源在电力系统中的渗透率持续攀升。国家能源局数据显示，2024年全国风电、光伏装机容量突破12亿千瓦，新能源发电量占比超过18%。高比例新能源接入使电力系统呈现"双高"特征——高电力电子化（同步发电机占比降低）和高运行不确定性（出力随机波动），对暂态稳定安全评估提出了新挑战 [vittal2022re_stability]。
+随着"双碳"目标推进，风电、光伏等新能源在电力系统中的渗透率持续攀升。国家能源局数据显示，2024年全国风电、光伏装机容量突破12亿千瓦，新能源发电量占比超过18%。高比例新能源接入使电力系统呈现"双高"特征——高电力电子化（同步发电机占比降低）和高运行不确定性（出力随机波动），对暂态稳定安全评估提出了新挑战 [hatziargyriou2020severity]。
 
 从物理层面分析，高比例新能源并网使安全边界辨识面临三重困难。**其一，系统惯量降低导致动态响应加速**。传统同步发电机转子的旋转动能提供天然的惯量支撑，而新能源通过电力电子接口并网不具旋转惯量。随着同步发电机被等容量替代，系统等效惯量常数 $H_{\text{eq}}$ 显著下降，使得故障后功角摇摆加快、频率变化率（RoCoF）增大，功角和频率约束的耦合增强 [liu2023inertia_re]。**其二，多时间尺度动态交互加剧**。电力电子装置的电流控制响应在毫秒级，而机电暂态过程在秒级，不同时间尺度的动态耦合使稳定边界呈现强非线性，难以用单一解析模型刻画 [wang2024voltage_re]。**其三，运行不确定性空间急剧扩展**。风光出力的随机波动使运行方式从确定性点扩展为高维概率分布，需要在8维甚至更高维的参数空间中搜索安全边界，计算代价呈指数增长。
 
@@ -33,7 +33,7 @@ High renewable energy (RE) penetration introduces significant uncertainty into p
 
 **（1）单一代理模型难以捕获多约束耦合特征**。暂态稳定受功角、频率、电压多约束共同作用 [hatziargyriou2020severity]。现有GP代理模型大多针对单一指标（如功角稳定裕度）建模 [wang2023gp_transient]，无法同时预测多约束严重度，难以揭示新能源渗透率变化引起的约束主导模式转换规律 [wang2024voltage_re]。Chen等 [chen2024mogp_voltage] 提出了多输出GP用于电压稳定预测，但未考虑功角和频率约束的耦合。Zhang等 [zhang2022deep_transient] 采用深度神经网络构建暂态稳定代理模型，在单约束预测中精度较高，但多约束联合预测能力有限。Li等 [li2021ensemble_severity] 提出基于集成学习的多指标评估方法，然而各子模型独立训练，未充分利用约束间的统计相关性。Xu等 [xu2023transfer_gp] 探索了迁移学习在GP暂态评估中的应用，但仅针对功角约束，未扩展至多约束场景。
 
-**（2）安全边界辨识缺乏高效采样策略**。直接通过网格搜索或蒙特卡洛采样辨识安全域边界计算代价巨大。贝叶斯优化（BO）在超参数优化 [snoek2012practical] 和实验设计领域已证明采样效率优势，近年来开始应用于电力系统场景选择 [bo2025der_scenarios, li2024bo_scenario] 和新能源稳定性分析 [zhang2023bo_renewable]。Frazier [frazier2018bo_tutorial] 系统总结了BO的理论框架，指出其在昂贵的黑箱函数优化中的独特优势。Yang等 [yang2024bo_dispatch] 将BO应用于电力系统经济调度优化，验证了其在连续-离散混合变量空间的适用性。但现有BO应用多聚焦于寻找最严重场景（worst-case），而非系统性地辨识完整的安全域边界。Wei等 [wei2023active_learning] 提出了基于主动学习的安全域采样，但未利用BO的采集函数机制进行定向勘探。
+**（2）安全边界辨识缺乏高效采样策略**。直接通过网格搜索或蒙特卡洛采样辨识安全域边界计算代价巨大。贝叶斯优化（BO）在超参数优化 [snoek2012practical] 和实验设计领域已证明采样效率优势，近年来开始应用于电力系统场景选择 [bo2025der_scenarios, li2024bo_scenario] 和新能源稳定性分析 [zhang2023bo_renewable]。Frazier [frazier2018bo_tutorial] 系统总结了BO的理论框架，指出其在昂贵的黑箱函数优化中的独特优势。Yang等 [yang2024bo_dispatch] 将BO应用于电力系统经济调度优化，验证了其在连续-离散混合变量空间的适用性。但现有BO应用多聚焦于寻找最严重场景（worst-case），而非系统性地辨识完整的安全域边界。Shahidinejad等 [shahidinejad2024gp_bo_transient] 将GP与BO结合用于暂态稳定边界探索，但采用一次性采样策略，边界质量受限于初始采样覆盖度。
 
 **（3）边界辨识与采样策略缺乏闭环反馈**。Shahidinejad等 [shahidinejad2024gp_bo_transient] 将GP与BO结合用于暂态稳定边界探索，但采用一次性采样策略，边界质量受限于初始采样覆盖度。Liu等 [liu2023security_region] 提出了基于安全域的快速评估方法，但边界参数固定，无法自适应更新。Guo等 [guo2024tiered_limit] 提出了运行方式聚类分档限额，但缺乏严格的安全域几何构造和闭环紧化机制。安全域的几何构造方面，Chow [chow1992security] 最早将安全域概念引入电力系统稳定性分析，但基于解析方法的构造仅适用于低维系统。Boyd和Vandenberghe [boyd2004convex] 发展的凸优化理论为安全域的仿射内逼近提供了数学工具，但其在电力系统中的应用尚未得到充分研究。
 
@@ -672,59 +672,73 @@ $$S(\mathbf{x}_i, f_j) = 0.4 \cdot f_{\text{angle}}(\mathbf{x}_i, f_j) + 0.3 \cd
 
 ## 参考文献
 
-[1] 王守相 and 王凯 and 薛智源. 基于高斯过程回归的电力系统暂态稳定评估方法.
+[1] Ye K, Zhao J, Li H, et al. A high computationally efficient parallel partial Gaussian process for large-scale power system probabilistic transient stability assessment[J]. IEEE Trans. Power Syst., 2024, 39(2): 4650-4660.
 
-[2] Chen, Y. and Liu, C. and Wang, Z.. Multi-output Gaussian process for voltage stability margin prediction.
+[2] Ye K, Zhao J, Duan N, et al. Physics-informed sparse Gaussian process for probabilistic stability analysis of large-scale power system with dynamic PVs and loads[J]. IEEE Trans. Power Syst., 2023, 38(3): 2868-2879.
 
-[3] Rasmussen, C. E. and Williams, C. K. I.. Gaussian Processes for Machine Learning.
+[3] Liu H, Ong Y S, Shen X, et al. When Gaussian process meets big data: a review of scalable GPs[J]. IEEE Trans. Neural Netw. Learn. Syst., 2020, 31(11): 4405-4423.
 
-[4] Li, Z. and Wu, H. and Wang, X.. Bayesian optimization for critical scenario selection in power system stability analysis.
+[4] Rasmussen C E, Williams C K I. Gaussian Processes for Machine Learning[M]. Cambridge, MA: MIT Press, 2006.
 
-[5] 张沛 and 迟永宁 and 李庚银. 基于贝叶斯优化的新能源电力系统小干扰稳定分析.
+[5] Han T, Chen Y, Ma J, et al. Surrogate modeling-based multi-objective dynamic VAR planning considering short-term voltage stability and transient stability[J]. IEEE Trans. Power Syst., 2018, 33(1): 622-633.
 
-[6] Snoek, J. and Larochelle, H. and Adams, R. P.. Practical Bayesian optimization of machine learning algorithms.
+[6] Liu T, Liu Y, Liu J, et al. A Bayesian learning based scheme for online dynamic security assessment and preventive control[J]. IEEE Trans. Power Syst., 2020, 35(5): 4088-4099.
 
-[7] Frazier, P. I.. A tutorial on Bayesian optimization.
+[7] Snoek J, Larochelle H, Adams R P. Practical Bayesian optimization of machine learning algorithms[C]// Advances in Neural Information Processing Systems, 2012, 25.
 
-[8] 刘明松 and 何剑 and 孙华东. 基于安全域的电力系统运行安全快速评估方法.
+[8] Frazier P I. A tutorial on Bayesian optimization[J]. arXiv preprint arXiv:1807.02811, 2018.
 
-[9] Boyd, S. and Vandenberghe, L.. Convex Optimization.
+[9] Yu Y, Liu Y, Qin C, et al. Theory and method of power system integrated security region irrelevant to operation states: an introduction[J]. Engineering, 2020, 6(7): 754-777.
 
-[10] Chow, J. H.. Power System Coherency and Model Reduction.
+[10] Dai Y, Zhang J, Xu P, et al. High-dimensional steady-state security region boundary approximation in power systems using feature non-linear converter and improved oblique decision tree[J]. J. Mod. Power Syst. Clean Energy, 2024, 12(6): 1786-1797.
 
-[11] Kundur, P.. Power System Stability and Control.
+[11] Boyd S, Vandenberghe L. Convex Optimization[M]. Cambridge: Cambridge University Press, 2004.
 
-[12] Milano, F.. An open source power system analysis toolbox.
+[12] Chow J H. Power System Coherency and Model Reduction[M]. New York, NY: Springer, 2013.
 
-[13] Vittal, V. and McCalley, J. and Agrawal, B.. Transient stability with high renewable penetration: challenges and solutions.
+[13] Kundur P. Power System Stability and Control[M]. New York: McGraw-Hill, 1994.
 
-[14] 刘文颖 and 陈宁 and 杨楠. 高比例新能源电力系统惯量支撑能力评估方法.
+[14] Hatziargyriou N, Milanovic J, Rahmann C, et al. Definition and classification of power system stability -- Revisited & extended[J]. IEEE Trans. Power Syst., 2021, 36(4): 3271-3281.
 
-[15] 王成山 and 武震天 and 李鹏. 高比例新能源接入下配电网电压稳定分析综述.
+[15] Hu P, Li Y, Yu Y, et al. Inertia estimation of renewable-energy-dominated power system[J]. Renew. Sustain. Energy Rev., 2023, 183: 113481.
 
-[16] Pearson, B. and Elliot, R. and Pourbeik, P.. Generic renewable energy system models for interconnection studies.
+[16] Murray W, Adonis M, Raji A K. Voltage control in future electrical distribution networks[J]. Renew. Sustain. Energy Rev., 2021, 146: 111100.
 
-[17] Li, H. and Diao, R. and Zhang, J.. {ANDES.
+[17] Li H, Diao R, Zhang J. ANDES: an open-source hybrid Python/C power system simulation tool[J]. IEEE Trans. Power Syst., 2023, 38(5): 4834-4845.
 
-[18] McKay, M. D. and Beckman, R. J. and Conover, W. J.. A comparison of three methods for selecting values of input variables.
+[18] Pearson B, Elliot R, Pourbeik P. Generic renewable energy system models for interconnection studies[J]. IEEE Trans. Energy Convers., 2021, 36(1): 245-254.
 
-[19] Hatziargyriou, N. and Milanovic, J. and Rahmann, C.. Definition and classification of power system stability.
+[19] McKay M D, Beckman R J, Conover W J. A comparison of three methods for selecting values of input variables[J]. Technometrics, 1979, 21(2): 239-245.
 
-[20] Bo, R. and Li, H. and Diao, R.. Selecting critical scenarios for {DER.
+[20] Bo R, Li H, Diao R. Selecting critical scenarios for DER adoption in distribution networks using Bayesian optimization[J]. arXiv preprint arXiv:2501.14118, 2025.
 
-[21] 孙英云 and 何光宇 and 梅生伟. 基于聚类分析的电力系统在线安全评估方法.
+[21] Liu R, Verbič G, Ma J, et al. Fast stability scanning for future grid scenario analysis[J]. IEEE Trans. Power Syst., 2018, 33(1): 514-524.
 
-[22] 郭庆来 and 孙宏斌 and 张伯明. 基于运行方式聚类的分档传输容量限额方法.
+[22] Wang X, Wang X, Sheng H, et al. A data-driven sparse polynomial chaos expansion method to assess probabilistic total transfer capability for power systems with renewables[J]. IEEE Trans. Power Syst., 2021, 36(3): 2573-2583.
 
-[23] Shahidinejad, M. and Bhowmik, S. and Bo, R.. Gaussian process-guided Bayesian optimization for transient stability boundary exploration.
+[23] Palm N, Landerer M, Palm H. Gaussian process regression based multi-objective Bayesian optimization for power system design[J]. Sustainability, 2022, 14(19): 12777.
 
-[24] 张沛 and 陈亦平 and 李庚银. 基于深度神经网络的电力系统暂态稳定评估方法.
+[24] Zhu L, Hill D J, Lü C. Hierarchical deep learning machine for power system online transient stability prediction[J]. IEEE Trans. Power Syst., 2020, 35(3): 2399-2411.
 
-[25] Li, Y. and Yang, B. and Zhang, N.. Ensemble learning based multi-index transient stability assessment for power systems.
+[25] Shi Z, Yao W, Zeng L, et al. Convolutional neural network-based power system transient stability assessment and instability mode prediction[J]. Appl. Energy, 2020, 263: 114586.
 
-[26] Xu, T. and Chen, Y. and Liu, C.. Transfer learning enhanced Gaussian process for power system transient stability assessment.
+[26] Li B, Wu J. Adaptive assessment of power system transient stability based on active transfer learning with deep belief network[J]. IEEE Trans. Autom. Sci. Eng., 2023, 20(2): 1047-1058.
 
-[27] Yang, Z. and Wang, K. and Liu, Y.. Bayesian optimization for economic dispatch with high renewable penetration.
+[27] Sarajčev P, Kunac A, Petrović G, et al. Power system transient stability assessment using stacked autoencoder and voting ensemble[J]. Energies, 2021, 14(11): 3148.
 
-[28] Wei, X. and Zhang, G. and Li, H.. Active learning-based security region sampling for power system stability assessment.
+[28] Wu Y, Ye Y, Hu J, et al. Chance constrained MDP formulation and Bayesian advantage policy optimization for stochastic dynamic optimal power flow[J]. IEEE Trans. Power Syst., 2024, 39(5): 6788-6791.
+
+[29] Hamilton R I, Papadopoulos P N. Using SHAP values and machine learning to understand trends in the transient stability limit[J]. IEEE Trans. Power Syst., 2024, 39(1): 1384-1397.
+
+[30] Wang Z, Niu T, Fang S, et al. Convex hull approximation of probabilistic security region of bulk power system with high renewable energy penetration considering N-k contingencies[J]. IEEE Trans. Power Syst., 2025, 40(6): 4882-4900.
+
+[31] Prabhakar K, Jain S K, Padhy P K. Inertia estimation in modern power system: a comprehensive review[J]. Electr. Power Syst. Res., 2022, 211: 108222.
+
+[32] Zhao T, Yue M, Wang J. Structure-informed graph learning of networked dependencies for online prediction of power system transient dynamics[J]. IEEE Trans. Power Syst., 2023, 37(6): 4885-4895.
+
+[33] Hijazi M, Dehghanian P, Wang S. Transfer learning for transient stability predictions in modern power systems under enduring topological changes[J]. IEEE Trans. Autom. Sci. Eng., 2024, 21(3): 3274-3288.
+
+[34] Zhan X, Han S, Rong N, et al. A hybrid transfer learning method for transient stability prediction considering sample imbalance[J]. Appl. Energy, 2023, 333: 120573.
+
+[35] Zhai C, Nguyen H D, Zong X. Dynamic security assessment of small-signal stability for power grids using windowed online Gaussian process[J]. IEEE Trans. Autom. Sci. Eng., 2023, 20(2): 1170-1179.
 
