@@ -1,239 +1,235 @@
 <mxfile host="app.diagrams.net" agent="draw.io" version="24.0.0">
-  <diagram id="framework" name="MOGP-BO-AIA&#26041;&#27861;&#26694;&#26550;&#22270;">
+  <diagram id="framework" name="MOGP-BO-AIA方法框架图">
     <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
 
-        <mxCell id="title" value="MOGP-BO-AIA &#38381;&#29615;&#34701;&#21512;&#26041;&#27861;&#26694;&#26550;" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#1A1A2E;" vertex="1" parent="1">
-          <mxGeometry x="440" y="15" width="500" height="36" as="geometry"/>
+        <mxCell id="title" value="MOGP-BO-AIA 闭环融合方法框架" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#1A1A2E;" vertex="1" parent="1">
+          <mxGeometry x="550" y="15" width="500" height="36" as="geometry"/>
         </mxCell>
 
         <mxCell id="mogp_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#E8EEF7;strokeColor=#2E4A7A;strokeWidth=2;container=0;pointerEvents=0;" vertex="1" parent="1">
-          <mxGeometry x="40" y="80" width="320" height="280" as="geometry"/>
+          <mxGeometry x="80" y="80" width="300" height="280" as="geometry"/>
         </mxCell>
-        <mxCell id="mogp_header" value="MOGP&#20195;&#29702;&#27169;&#22411;" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#2E4A7A;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="115" y="90" width="170" height="30" as="geometry"/>
+        <mxCell id="mogp_header" value="MOGP代理模型" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#2E4A7A;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="145" y="90" width="170" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="mogp_sub" value="Multi-Output Gaussian Process" style="text;html=1;fontSize=10;fontColor=#5B7BA5;align=center;" vertex="1" parent="1">
-          <mxGeometry x="100" y="122" width="200" height="18" as="geometry"/>
+          <mxGeometry x="130" y="122" width="200" height="18" as="geometry"/>
         </mxCell>
 
-        <mxCell id="mogp_input" value="&#36755;&#20837;&#10;&#35757;&#32451;&#25968;&#25454; {(x&#7522;, y&#7522;)}&#8347;&#7522;&#8321;&#185;" style="shape=parallelogram;whiteSpace=wrap;fillColor=#D5E1F0;strokeColor=#2E4A7A;strokeWidth=1;fontSize=10;fontColor=#1B3A6B;fontStyle=0;align=center;" vertex="1" parent="1">
-          <mxGeometry x="80" y="148" width="240" height="40" as="geometry"/>
+        <mxCell id="mogp_input" value="输入&#10;训练数据 {(x&#7522;, y&#7522;)}&#8347;&#7522;&#8321;&#185;" style="shape=parallelogram;whiteSpace=wrap;fillColor=#D5E1F0;strokeColor=#2E4A7A;strokeWidth=1;fontSize=10;fontColor=#1B3A6B;fontStyle=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="110" y="148" width="240" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="mogp_kernel" value="Mat&#233;rn 5/2&#26680;&#20989;&#25968;&#10;&#36229;&#21442;&#25968;&#20248;&#21270; (MLE)" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#2E4A7A;strokeWidth=1;fontSize=9;fontColor=#2E4A7A;align=center;" vertex="1" parent="1">
-          <mxGeometry x="80" y="200" width="110" height="40" as="geometry"/>
+        <mxCell id="mogp_kernel" value="Mat&#233;rn 5/2核函数&#10;超参数优化 (MLE)" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#2E4A7A;strokeWidth=1;fontSize=9;fontColor=#2E4A7A;align=center;" vertex="1" parent="1">
+          <mxGeometry x="100" y="200" width="110" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="mogp_pred" value="多输出联合预测&#10;协同除流抽象" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#2E4A7A;strokeWidth=1;fontSize=9;fontColor=#2E4A7A;align=center;" vertex="1" parent="1">
+          <mxGeometry x="250" y="200" width="110" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="mogp_pred" value="&#22810;&#36755;&#20986;&#32852;&#21512;&#39044;&#27979;&#10;&#21327;&#21521;&#38500;&#27969;&#25277;&#35937;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#2E4A7A;strokeWidth=1;fontSize=9;fontColor=#2E4A7A;align=center;" vertex="1" parent="1">
-          <mxGeometry x="210" y="200" width="110" height="40" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="mogp_arrow1" value="" style="endArrow=block;html=1;strokeColor=#2E4A7A;strokeWidth=1.5;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1">
+        <mxCell id="mogp_arrow1" value="" style="endArrow=block;html=1;strokeColor=#2E4A7A;strokeWidth=1.5;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="190" y="220" as="sourcePoint"/>
-            <mxPoint x="210" y="220" as="targetPoint"/>
+            <mxPoint x="210" y="220" as="sourcePoint"/>
+            <mxPoint x="250" y="220" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="mogp_output" value="&#36755;&#20986;&#10;&#39044;&#27979;&#20998;&#24067; (&#956;, &#963;&#178;)" style="shape=parallelogram;whiteSpace=wrap;fillColor=#2E4A7A;strokeColor=#1B3A6B;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
-          <mxGeometry x="100" y="258" width="200" height="40" as="geometry"/>
+        <mxCell id="mogp_output" value="输出&#10;预测分布 (&#956;, &#963;&#178;)" style="shape=parallelogram;whiteSpace=wrap;fillColor=#2E4A7A;strokeColor=#1B3A6B;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="130" y="258" width="200" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="mogp_uncertainty" value="&#19981;&#30830;&#23450;&#24615;&#37327;&#21270; &#8594; &#20026;BO&#25552;&#20379;&#32622;&#20449;" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="100" y="302" width="200" height="16" as="geometry"/>
+        <mxCell id="mogp_uncertainty" value="不确定性量化 &#8594; 为BO提供置信" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="130" y="302" width="200" height="16" as="geometry"/>
         </mxCell>
 
-        <mxCell id="arrow_mogp_bo" value="GP&#39044;&#27979; + &#19981;&#30830;&#23450;&#24615;" style="endArrow=block;html=1;strokeColor=#2E4A7A;strokeWidth=3;fontSize=11;fontStyle=1;fontColor=#2E4A7A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+        <mxCell id="arrow_mogp_bo" value="GP预测+不确定性" style="endArrow=block;html=1;strokeColor=#2E4A7A;strokeWidth=3;fontSize=9;fontStyle=1;fontColor=#2E4A7A;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="370" y="220" as="sourcePoint"/>
-            <mxPoint x="420" y="220" as="targetPoint"/>
+            <mxPoint x="385" y="220" as="sourcePoint"/>
+            <mxPoint x="455" y="220" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
         <mxCell id="bo_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#E8F5E9;strokeColor=#1B7A3D;strokeWidth=2;container=0;pointerEvents=0;" vertex="1" parent="1">
-          <mxGeometry x="420" y="80" width="320" height="280" as="geometry"/>
+          <mxGeometry x="460" y="80" width="300" height="280" as="geometry"/>
         </mxCell>
-        <mxCell id="bo_header" value="BO&#21208;&#25506;&#27169;&#22359;" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#1B7A3D;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="495" y="90" width="170" height="30" as="geometry"/>
+        <mxCell id="bo_header" value="BO勘探模块" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#1B7A3D;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="525" y="90" width="170" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="bo_sub" value="Bayesian Optimization Exploration" style="text;html=1;fontSize=10;fontColor=#4A8C5C;align=center;" vertex="1" parent="1">
-          <mxGeometry x="480" y="122" width="200" height="18" as="geometry"/>
+          <mxGeometry x="510" y="122" width="200" height="18" as="geometry"/>
         </mxCell>
 
-        <mxCell id="bo_input" value="&#36755;&#20837;&#10;GP&#39044;&#27979; + &#19981;&#30830;&#23450;&#24615; &#963;(x)" style="shape=parallelogram;whiteSpace=wrap;fillColor=#C8E6C9;strokeColor=#1B7A3D;strokeWidth=1;fontSize=10;fontColor=#1B5E20;align=center;" vertex="1" parent="1">
-          <mxGeometry x="460" y="148" width="240" height="40" as="geometry"/>
+        <mxCell id="bo_input" value="输入&#10;GP预测 + 不确定性 &#963;(x)" style="shape=parallelogram;whiteSpace=wrap;fillColor=#C8E6C9;strokeColor=#1B7A3D;strokeWidth=1;fontSize=10;fontColor=#1B5E20;align=center;" vertex="1" parent="1">
+          <mxGeometry x="490" y="148" width="240" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="bo_ei" value="EI&#37319;&#38598;&#20989;&#25968;&#10;&#945;(x) = &#963;[&#947;&#908; + &#966;(&#947;&#908;)]" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#1B7A3D;strokeWidth=1;fontSize=9;fontColor=#1B7A3D;align=center;" vertex="1" parent="1">
-          <mxGeometry x="460" y="200" width="110" height="40" as="geometry"/>
+        <mxCell id="bo_ei" value="EI采集函数&#10;&#945;(x) = &#963;[&#947;&#8314; + &#966;(&#947;&#8314;)]" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#1B7A3D;strokeWidth=1;fontSize=9;fontColor=#1B7A3D;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="200" width="110" height="40" as="geometry"/>
         </mxCell>
-
-        <mxCell id="bo_search" value="&#23450;&#21521;&#25628;&#32034;&#10;&#34180;&#24369;&#28857;&#37051;&#22495;&#10;&#20505;&#36873;&#38598; {x*}" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#1B7A3D;strokeWidth=1;fontSize=9;fontColor=#1B7A3D;align=center;" vertex="1" parent="1">
-          <mxGeometry x="590" y="200" width="110" height="40" as="geometry"/>
+        <mxCell id="bo_search" value="定向搜索&#10;薄弱点邻域&#10;候选集 {x*}" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#1B7A3D;strokeWidth=1;fontSize=9;fontColor=#1B7A3D;align=center;" vertex="1" parent="1">
+          <mxGeometry x="625" y="200" width="110" height="40" as="geometry"/>
         </mxCell>
 
         <mxCell id="bo_arrow1" value="" style="endArrow=block;html=1;strokeColor=#1B7A3D;strokeWidth=1.5;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="570" y="220" as="sourcePoint"/>
-            <mxPoint x="590" y="220" as="targetPoint"/>
+            <mxPoint x="590" y="220" as="sourcePoint"/>
+            <mxPoint x="625" y="220" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="bo_output" value="&#36755;&#20986;&#10;&#20020;&#30028;&#28857;&#20505;&#36873;&#38598; {x*}" style="shape=parallelogram;whiteSpace=wrap;fillColor=#1B7A3D;strokeColor=#0D5A28;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
-          <mxGeometry x="480" y="258" width="200" height="40" as="geometry"/>
+        <mxCell id="bo_output" value="输出&#10;临界点候选集 {x*}" style="shape=parallelogram;whiteSpace=wrap;fillColor=#1B7A3D;strokeColor=#0D5A28;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="510" y="258" width="200" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="bo_note" value="ANDES&#26102;&#22495;&#20223;&#30495;&#35780;&#20215;&#26032;&#28857;" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="480" y="302" width="200" height="16" as="geometry"/>
+        <mxCell id="bo_note" value="ANDES时域仿真评价新点" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="510" y="302" width="200" height="16" as="geometry"/>
         </mxCell>
 
-        <mxCell id="arrow_bo_aia" value="&#23433;&#20840;/&#19981;&#23433;&#20840;&#28857;&#38598;" style="endArrow=block;html=1;strokeColor=#1B7A3D;strokeWidth=3;fontSize=11;fontStyle=1;fontColor=#1B7A3D;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
+        <mxCell id="arrow_bo_aia" value="安全/不安全点集" style="endArrow=block;html=1;strokeColor=#1B7A3D;strokeWidth=3;fontSize=9;fontStyle=1;fontColor=#1B7A3D;labelBackgroundColor=#FFFFFF;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="750" y="220" as="sourcePoint"/>
-            <mxPoint x="800" y="220" as="targetPoint"/>
+            <mxPoint x="765" y="220" as="sourcePoint"/>
+            <mxPoint x="835" y="220" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
         <mxCell id="aia_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#FFF8E1;strokeColor=#B8860B;strokeWidth=2;container=0;pointerEvents=0;" vertex="1" parent="1">
-          <mxGeometry x="800" y="80" width="320" height="280" as="geometry"/>
+          <mxGeometry x="840" y="80" width="300" height="280" as="geometry"/>
         </mxCell>
-        <mxCell id="aia_header" value="AIA&#36793;&#30028;&#26500;&#36896;&#27169;&#22359;" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#B8860B;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="875" y="90" width="170" height="30" as="geometry"/>
+        <mxCell id="aia_header" value="AIA边界构造模块" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#B8860B;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="905" y="90" width="170" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="aia_sub" value="Affine Inner Approximation" style="text;html=1;fontSize=10;fontColor=#9A7B2D;align=center;" vertex="1" parent="1">
-          <mxGeometry x="860" y="122" width="200" height="18" as="geometry"/>
+          <mxGeometry x="890" y="122" width="200" height="18" as="geometry"/>
         </mxCell>
 
-        <mxCell id="aia_input" value="&#36755;&#20837;&#10;&#23433;&#20840;&#28857;&#38598; S&#8319;&#8320;&#34320; + &#19981;&#23433;&#20840;&#28857;&#38598; S&#8347;&#8345;" style="shape=parallelogram;whiteSpace=wrap;fillColor=#FFF0C8;strokeColor=#B8860B;strokeWidth=1;fontSize=10;fontColor=#7A5A00;align=center;" vertex="1" parent="1">
-          <mxGeometry x="840" y="148" width="240" height="40" as="geometry"/>
+        <mxCell id="aia_input" value="输入&#10;安全点集 S&#8347;&#8345; + 不安全点集 S&#8348;" style="shape=parallelogram;whiteSpace=wrap;fillColor=#FFF0C8;strokeColor=#B8860B;strokeWidth=1;fontSize=10;fontColor=#7A5A00;align=center;" vertex="1" parent="1">
+          <mxGeometry x="870" y="148" width="240" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="aia_conv" value="&#23433;&#20840;&#28857;&#20984;&#21253;&#10;QuickHull" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#B8860B;strokeWidth=1;fontSize=9;fontColor=#B8860B;align=center;" vertex="1" parent="1">
-          <mxGeometry x="840" y="200" width="100" height="40" as="geometry"/>
+        <mxCell id="aia_conv" value="安全点凸包&#10;QuickHull" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#B8860B;strokeWidth=1;fontSize=9;fontColor=#B8860B;align=center;" vertex="1" parent="1">
+          <mxGeometry x="855" y="200" width="100" height="40" as="geometry"/>
         </mxCell>
-
-        <mxCell id="aia_lp" value="LP&#20998;&#31163;&#36229;&#24179;&#38754;&#10;&#25910;&#32553; &#949;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#B8860B;strokeWidth=1;fontSize=9;fontColor=#B8860B;align=center;" vertex="1" parent="1">
-          <mxGeometry x="955" y="200" width="100" height="40" as="geometry"/>
+        <mxCell id="aia_lp" value="LP分离超平面&#10;收缩 &#949;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#B8860B;strokeWidth=1;fontSize=9;fontColor=#B8860B;align=center;" vertex="1" parent="1">
+          <mxGeometry x="980" y="200" width="100" height="40" as="geometry"/>
         </mxCell>
 
         <mxCell id="aia_arrow1" value="" style="endArrow=block;html=1;strokeColor=#B8860B;strokeWidth=1.5;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="940" y="220" as="sourcePoint"/>
-            <mxPoint x="955" y="220" as="targetPoint"/>
+            <mxPoint x="955" y="220" as="sourcePoint"/>
+            <mxPoint x="980" y="220" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="aia_output" value="&#36755;&#20986;&#10;&#20223;&#23556;&#23433;&#20840;&#22495; P = {x | Ax &#8804; b}" style="shape=parallelogram;whiteSpace=wrap;fillColor=#B8860B;strokeColor=#8B6508;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
-          <mxGeometry x="845" y="258" width="230" height="40" as="geometry"/>
+        <mxCell id="aia_output" value="输出&#10;仿射安全域 P = {x | Ax &#8804; b}" style="shape=parallelogram;whiteSpace=wrap;fillColor=#B8860B;strokeColor=#8B6508;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="880" y="258" width="220" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="aia_note" value="&#20882;&#20313;&#38754;&#21098;&#26525; + &#20256;&#36755;&#38480;&#39069;&#35745;&#31639;" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="860" y="302" width="200" height="16" as="geometry"/>
+        <mxCell id="aia_note" value="凸余面剪枝 + 传输限额计算" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="890" y="302" width="200" height="16" as="geometry"/>
         </mxCell>
 
         <mxCell id="arrow_aia_loop" value="" style="endArrow=block;html=1;strokeColor=#C0392B;strokeWidth=3;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1120" y="220" as="sourcePoint"/>
-            <mxPoint x="1160" y="220" as="targetPoint"/>
+            <mxPoint x="1145" y="220" as="sourcePoint"/>
+            <mxPoint x="1215" y="220" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
         <mxCell id="loop_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#FDEDEC;strokeColor=#C0392B;strokeWidth=2;container=0;pointerEvents=0;" vertex="1" parent="1">
-          <mxGeometry x="1160" y="80" width="320" height="280" as="geometry"/>
+          <mxGeometry x="1220" y="80" width="300" height="280" as="geometry"/>
         </mxCell>
-        <mxCell id="loop_header" value="&#38381;&#29615;&#36845;&#20195;&#27169;&#22359;" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#C0392B;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="1235" y="90" width="170" height="30" as="geometry"/>
+        <mxCell id="loop_header" value="闭环迭代模块" style="text;html=1;fontSize=14;fontStyle=1;fontColor=#FFFFFF;fillColor=#C0392B;strokeColor=none;rounded=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1285" y="90" width="170" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="loop_sub" value="Closed-Loop Iteration" style="text;html=1;fontSize=10;fontColor=#A04040;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1220" y="122" width="200" height="18" as="geometry"/>
+          <mxGeometry x="1270" y="122" width="200" height="18" as="geometry"/>
         </mxCell>
 
-        <mxCell id="loop_input" value="&#36755;&#20837;&#10;&#24403;&#21069;&#36793;&#30028; P&#7526;" style="shape=parallelogram;whiteSpace=wrap;fillColor=#FADBD8;strokeColor=#C0392B;strokeWidth=1;fontSize=10;fontColor=#922B21;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="148" width="240" height="40" as="geometry"/>
+        <mxCell id="loop_input" value="输入&#10;当前边界 P&#7526;" style="shape=parallelogram;whiteSpace=wrap;fillColor=#FADBD8;strokeColor=#C0392B;strokeWidth=1;fontSize=10;fontColor=#922B21;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="148" width="240" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="loop_eval" value="&#36793;&#30028;&#36136;&#37327;&#35780;&#20272;&#10;&#25910;&#25142;&#21028;&#25454;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#C0392B;strokeWidth=1;fontSize=9;fontColor=#C0392B;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1200" y="200" width="110" height="40" as="geometry"/>
+        <mxCell id="loop_eval" value="边界质量评估&#10;收敛判断" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#C0392B;strokeWidth=1;fontSize=9;fontColor=#C0392B;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1235" y="200" width="110" height="40" as="geometry"/>
         </mxCell>
-
-        <mxCell id="loop_weak" value="&#34180;&#24369;&#28857;&#35782;&#21035;&#10;&#8594; &#19979;&#19968;&#36718;BO&#25628;&#32034;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#C0392B;strokeWidth=1;fontSize=9;fontColor=#C0392B;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1330" y="200" width="110" height="40" as="geometry"/>
+        <mxCell id="loop_weak" value="薄弱点识别&#10;&#8594; 下一轮BO搜索" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#C0392B;strokeWidth=1;fontSize=9;fontColor=#C0392B;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1385" y="200" width="110" height="40" as="geometry"/>
         </mxCell>
 
         <mxCell id="loop_arrow1" value="" style="endArrow=block;html=1;strokeColor=#C0392B;strokeWidth=1.5;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1310" y="220" as="sourcePoint"/>
-            <mxPoint x="1330" y="220" as="targetPoint"/>
+            <mxPoint x="1345" y="220" as="sourcePoint"/>
+            <mxPoint x="1385" y="220" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="loop_output" value="&#36755;&#20986;&#10;&#34120;&#24369;&#28857; &#8594; &#19979;&#19968;&#36718;BO&#25628;&#32034;" style="shape=parallelogram;whiteSpace=wrap;fillColor=#C0392B;strokeColor=#922B21;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1210" y="258" width="220" height="40" as="geometry"/>
+        <mxCell id="loop_output" value="输出&#10;薄弱点 &#8594; 下一轮BO搜索" style="shape=parallelogram;whiteSpace=wrap;fillColor=#C0392B;strokeColor=#922B21;strokeWidth=1;fontSize=11;fontColor=#FFFFFF;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1260" y="258" width="220" height="40" as="geometry"/>
         </mxCell>
 
-        <mxCell id="loop_converge" value="&#25910;&#25142;&#26465;&#20214;: &#36793;&#30028;&#21464;&#21270; &lt; &#949;&#7528; &#25110; &#36798;&#21040;&#26368;&#22823;&#36845;&#20195;&#27425;&#25968;" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1180" y="302" width="280" height="16" as="geometry"/>
+        <mxCell id="loop_converge" value="收敛条件: 边界变化 &lt; &#949;&#7526; 或 达到最大迭代次数" style="text;html=1;fontSize=8;fontColor=#7F8C8D;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="302" width="260" height="16" as="geometry"/>
         </mxCell>
 
-        <mxCell id="feedback_arrow" value="&#34120;&#24369;&#28857;&#21453;&#39304; &#8592; &#19979;&#19968;&#36718;BO&#25351;&#23548;&#25628;&#32034;" style="endArrow=block;html=1;strokeColor=#E74C3C;strokeWidth=4;curved=1;fontSize=12;fontStyle=1;fontColor=#E74C3C;labelBackgroundColor=#FFFFFF;dashed=0;entryX=0.5;entryY=1;exitX=0.5;exitY=1;" edge="1" parent="1">
+        <mxCell id="feedback_arrow" value="薄弱点反馈 &#8592; 下一轮BO指导搜索" style="endArrow=block;html=1;strokeColor=#E74C3C;strokeWidth=4;curved=1;fontSize=12;fontStyle=1;fontColor=#E74C3C;labelBackgroundColor=#FFFFFF;dashed=0;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1320" y="370" as="sourcePoint"/>
-            <mxPoint x="580" y="370" as="targetPoint"/>
+            <mxPoint x="1370" y="370" as="sourcePoint"/>
+            <mxPoint x="610" y="370" as="targetPoint"/>
             <Array as="points">
-              <mxPoint x="1320" y="410"/>
-              <mxPoint x="580" y="410"/>
+              <mxPoint x="1370" y="410"/>
+              <mxPoint x="610" y="410"/>
             </Array>
           </mxGeometry>
         </mxCell>
 
         <mxCell id="step1" value="Step 1" style="shape=mxgraph.arrows2.arrow;dy=0.6;dx=35;notch=0;fillColor=#2E4A7A;strokeColor=#1B3A6B;fontColor=#FFFFFF;fontSize=9;fontStyle=1;whiteSpace=wrap;align=center;" vertex="1" parent="1">
-          <mxGeometry x="150" y="440" width="120" height="30" as="geometry"/>
+          <mxGeometry x="170" y="440" width="120" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="step2" value="Step 2" style="shape=mxgraph.arrows2.arrow;dy=0.6;dx=35;notch=0;fillColor=#1B7A3D;strokeColor=#0D5A28;fontColor=#FFFFFF;fontSize=9;fontStyle=1;whiteSpace=wrap;align=center;" vertex="1" parent="1">
-          <mxGeometry x="530" y="440" width="120" height="30" as="geometry"/>
+          <mxGeometry x="550" y="440" width="120" height="30" as="geometry"/>
         </mxCell>
-        <mxCell id="step3" value="Step 3" style="shape=mxgraph.arrows2.arrow;dy=0.6;dx=35;notch=0;fillColor=#B8860B;strokeColor=#8B6508;fontColor=#FFFFFF;fontSize=9;fontStyle=1;whiteSpace=wrap;align:center;" vertex="1" parent="1">
-          <mxGeometry x="910" y="440" width="120" height="30" as="geometry"/>
+        <mxCell id="step3" value="Step 3" style="shape=mxgraph.arrows2.arrow;dy=0.6;dx=35;notch=0;fillColor=#B8860B;strokeColor=#8B6508;fontColor=#FFFFFF;fontSize=9;fontStyle=1;whiteSpace=wrap;align=center;" vertex="1" parent="1">
+          <mxGeometry x="930" y="440" width="120" height="30" as="geometry"/>
         </mxCell>
         <mxCell id="step4" value="Step 4" style="shape=mxgraph.arrows2.arrow;dy=0.6;dx=35;notch=0;fillColor=#C0392B;strokeColor=#922B21;fontColor=#FFFFFF;fontSize=9;fontStyle=1;whiteSpace=wrap;align=center;" vertex="1" parent="1">
-          <mxGeometry x="1290" y="440" width="120" height="30" as="geometry"/>
+          <mxGeometry x="1310" y="440" width="120" height="30" as="geometry"/>
         </mxCell>
 
         <mxCell id="step_arrow_1_2" value="" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="270" y="455" as="sourcePoint"/>
-            <mxPoint x="530" y="455" as="targetPoint"/>
+            <mxPoint x="290" y="455" as="sourcePoint"/>
+            <mxPoint x="550" y="455" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
         <mxCell id="step_arrow_2_3" value="" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="650" y="455" as="sourcePoint"/>
-            <mxPoint x="910" y="455" as="targetPoint"/>
+            <mxPoint x="670" y="455" as="sourcePoint"/>
+            <mxPoint x="930" y="455" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
         <mxCell id="step_arrow_3_4" value="" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1030" y="455" as="sourcePoint"/>
-            <mxPoint x="1290" y="455" as="targetPoint"/>
+            <mxPoint x="1050" y="455" as="sourcePoint"/>
+            <mxPoint x="1310" y="455" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="final_output" value="&#26368;&#32456;&#36755;&#20986;&#10;&#20998;&#22330;&#26223;AIA&#23433;&#20840;&#36793;&#30028; P = {x | Ax &#8804; b} + &#20256;&#36755;&#23481;&#37327;&#38480;&#39069;" style="shape=document;whiteSpace=wrap;fillColor=#1A1A2E;strokeColor=#0D0D1A;strokeWidth=2;fontSize=12;fontColor=#FFFFFF;fontStyle=1;align=center;size=0.15;" vertex="1" parent="1">
-          <mxGeometry x="540" y="500" width="380" height="55" as="geometry"/>
+        <mxCell id="final_output" value="最终输出&#10;分场景AIA安全边界 P = {x | Ax &#8804; b} + 传输容量限额" style="shape=document;whiteSpace=wrap;fillColor=#1A1A2E;strokeColor=#0D0D1A;strokeWidth=2;fontSize=12;fontColor=#FFFFFF;fontStyle=1;align=center;size=0.15;" vertex="1" parent="1">
+          <mxGeometry x="610" y="500" width="380" height="55" as="geometry"/>
         </mxCell>
 
         <mxCell id="final_arrow" value="" style="endArrow=block;html=1;strokeColor=#1A1A2E;strokeWidth=3;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="730" y="410" as="sourcePoint"/>
-            <mxPoint x="730" y="500" as="targetPoint"/>
+            <mxPoint x="800" y="410" as="sourcePoint"/>
+            <mxPoint x="800" y="500" as="targetPoint"/>
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="note_bottom" value="* &#27169;&#22359;&#21517;&#31216;&#20013;&#25991;&#26631;&#27880;&#65292;&#25216;&#26415;&#26415;&#35821;&#33521;&#25991;&#26631;&#27880; * &#32418;&#33394;&#34320;&#24369;&#28857;&#21453;&#39304;&#31661;&#22836;&#34920;&#31034;&#38381;&#29615;&#36845;&#20195;&#36335;&#24452;" style="text;html=1;fontSize=9;fontColor=#95A5A6;fontStyle=2;align=center;" vertex="1" parent="1">
-          <mxGeometry x="440" y="565" width="500" height="18" as="geometry"/>
+        <mxCell id="note_bottom" value="* 模块名称中文标注，技术术语英文标注 * 红色薄弱点反馈箭头表示闭环迭代路径" style="text;html=1;fontSize=9;fontColor=#95A5A6;fontStyle=2;align=center;" vertex="1" parent="1">
+          <mxGeometry x="550" y="565" width="500" height="18" as="geometry"/>
         </mxCell>
 
       </root>

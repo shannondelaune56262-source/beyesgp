@@ -1,0 +1,38 @@
+# Base configuration for BO-WCS experiments
+
+optimizer:
+  n_init: 15        # Sobol initial samples
+  n_iter: 60        # BO iterations
+  acquisition: "EI" # EI, UCB, PI
+  kernel: "matern52" # matern52, matern32, rbf
+  ard: true         # Automatic Relevance Determination
+  num_restarts: 20  # Acquisition optimization restarts
+  raw_samples: 100  # Raw samples for acquisition opt
+
+simulation:
+  tf: 10.0          # Simulation horizon (seconds)
+  tstep: 0.02       # Time step
+  criteria: 1       # Enable early termination on instability
+  timeout: 60       # Per-scenario timeout (seconds)
+
+severity:
+  w_angle: 0.5
+  w_freq: 0.25
+  w_voltage: 0.25
+  angle_threshold: 180.0  # degrees
+  freq_nominal: 60.0      # Hz (Kundur is 60Hz system)
+  freq_deviation: 2.0     # Hz normalization factor
+  voltage_min: 0.0        # voltage dip normalization floor
+
+experiment:
+  n_seeds: 3
+  seeds: [42, 123, 456]
+  n_workers: 2      # Parallel workers (降低以避免系统卡死，原值8)
+  cache_simulations: true
+
+output:
+  data_dir: "data"
+  figures_dir: "data/figures"
+  tables_dir: "data/tables"
+  figure_format: "pdf"
+  figure_dpi: 300

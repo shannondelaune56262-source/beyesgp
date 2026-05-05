@@ -1,0 +1,30 @@
+# Experiment: Clustering-based mode analysis
+experiment_name: "exp_clustering"
+
+mode_generation:
+  n_modes: 1000
+  seed: 42
+  method: "lhs"  # Latin Hypercube Sampling
+
+clustering:
+  algorithm: "kmeans"
+  n_clusters: 5
+  boundary_quantile: 0.75
+  auto_select_k: true
+  k_range: [3, 4, 5, 6, 7, 8]
+
+simulation:
+  fault_bus: 7
+  fault_time: 1.0
+  clear_duration: 0.10
+  tf: 10.0
+  tstep: 0.02
+  timeout: 60
+
+feature_extraction:
+  include_severity: true
+  pca_dim: 3
+
+analysis:
+  compute_cluster_stats: true
+  compare_boundary_vs_center: true

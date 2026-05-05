@@ -1,0 +1,17 @@
+# Experiment 1: Kundur 2D low-dimensional validation
+experiment_name: "exp1_kundur_2d"
+
+optimizer:
+  n_init: 10
+  n_iter: 40
+  acquisition: "EI"
+  kernel: "matern52"
+
+simulation:
+  tf: 10.0
+  timeout: 60
+
+experiment:
+  n_seeds: 3
+  seeds: [42, 123, 456]
+  n_workers: 2

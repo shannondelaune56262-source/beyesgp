@@ -1,0 +1,18 @@
+{
+  "algorithm": "GP+BO+AIA Closed-Loop Refinement",
+  "input": "Operating modes X, fault set F, severity threshold θ",
+  "output": "Refined AIA boundaries P={x|Ax≤b} per scenario",
+  "steps": [
+    "1. Initialize: Generate mode samples via LHS, evaluate severity S(x,f)",
+    "2. Cluster modes into K groups using K-means",
+    "3. For each scenario (f_k, cluster_j):",
+    "   a. Separate X into X_safe={x|S(x,f)<θ} and X_unsafe",
+    "   b. Compute AIA boundary P via convex hull + LP separation",
+    "4. Repeat for R rounds:",
+    "   a. Find weakest boundary points: argmin margin(x, P)",
+    "   b. BO directed search: sample near weak points",
+    "   c. Update X_safe/X_unsafe with new evaluations",
+    "   d. Recompute AIA boundary P",
+    "5. Output refined boundaries with convergence guarantee"
+  ]
+}

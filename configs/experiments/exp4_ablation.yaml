@@ -1,0 +1,17 @@
+# Experiment 4: Acquisition function ablation study
+experiment_name: "exp4_ablation"
+
+optimizer:
+  n_init: 15
+  n_iter: 60
+  acquisition: "EI"  # Will be overridden per run
+  kernel: "matern52"
+
+simulation:
+  tf: 10.0
+  timeout: 60
+
+experiment:
+  n_seeds: 3
+  seeds: [42, 123, 456]
+  n_workers: 2

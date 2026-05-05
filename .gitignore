@@ -1,12 +1,13 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*.class
-*.so
-*.egg-info/
-dist/
-build/
-*.egg
-.env
-.claude/
-
+*.lst
+*.npz
+oalex*
+openalex_*
+find_dois*
+find_papers*
+check_bib_stats*
+final_stats*
+doi_verification*
+experiment.log
+kundur_*_out.*
+gh.exe
+search_openalex*

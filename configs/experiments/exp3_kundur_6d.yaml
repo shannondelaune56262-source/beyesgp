@@ -1,0 +1,17 @@
+# Experiment 3: Kundur 6D high-dimensional challenge
+experiment_name: "exp3_kundur_6d"
+
+optimizer:
+  n_init: 25
+  n_iter: 100
+  acquisition: "EI"
+  kernel: "matern52"
+
+simulation:
+  tf: 10.0
+  timeout: 60
+
+experiment:
+  n_seeds: 3
+  seeds: [42, 123, 456]
+  n_workers: 2

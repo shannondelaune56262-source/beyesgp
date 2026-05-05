@@ -1,0 +1,21 @@
+# Experiment: BO efficiency comparison within clusters
+experiment_name: "exp_bo_efficiency"
+
+optimizer:
+  n_init: 5
+  n_iter: 20
+  acquisition: "EI"
+  kernel: "matern52"
+
+bo_comparison:
+  methods: ["bo", "random", "lhs", "ga"]
+  n_seeds: 3
+  seeds: [42, 123, 456]
+  budget_per_cluster: 25
+
+simulation:
+  fault_bus: 7
+  fault_time: 1.0
+  tf: 10.0
+  tstep: 0.02
+  timeout: 60

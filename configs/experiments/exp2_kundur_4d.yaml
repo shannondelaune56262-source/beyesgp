@@ -1,0 +1,17 @@
+# Experiment 2: Kundur 4D core comparison
+experiment_name: "exp2_kundur_4d"
+
+optimizer:
+  n_init: 15
+  n_iter: 60
+  acquisition: "EI"
+  kernel: "matern52"
+
+simulation:
+  tf: 10.0
+  timeout: 60
+
+experiment:
+  n_seeds: 3
+  seeds: [42, 123, 456]
+  n_workers: 2

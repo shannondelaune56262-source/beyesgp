@@ -1,0 +1,84 @@
+# Kundur 2-area test system configuration
+# 4-machine, 10-bus system (ANDES built-in case)
+
+system:
+  name: "Kundur 2-Area"
+  case_path: "kundur/kundur_full.xlsx"  # ANDES built-in case
+  n_gen: 4
+  n_bus: 10
+  n_line: 15
+  freq_nominal: 60.0  # Hz
+
+# Buses eligible for three-phase fault (exclude slack bus 1)
+fault_buses: [2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Tie lines between the two areas (most critical for inter-area oscillations)
+# ANDES Kundur line mapping (Line_idx → bus1→bus2):
+#   Line_0, Line_1: 5→6 (tie-line, parallel)
+#   Line_4, Line_5, Line_6: 7→8 (tie-line, parallel)
+#   Line_11: 1→5, Line_12: 2→6, Line_13: 3→9, Line_14: 4→10
+tie_lines: ["Line_4", "Line_5", "Line_6"]
+
+# All lines eligible for N-1 contingency
+contingency_lines: ["Line_0", "Line_1", "Line_2", "Line_3",
+                    "Line_4", "Line_5", "Line_6", "Line_7", "Line_8",
+                    "Line_9", "Line_10", "Line_11", "Line_12", "Line_13", "Line_14"]
+
+# Generators
+generators: ["GENROU_1", "GENROU_2", "GENROU_3", "GENROU_4"]
+
+# Scenario spaces for different experiments
+scenario_spaces:
+  # Experiment 1: 2D validation
+  2d:
+    dimensions:
+      - name: "fault_bus"
+        type: "categorical"  # Mapped from continuous
+        values: [2, 3, 4, 5, 6, 7, 8, 9, 10]
+        bounds: [0.0, 1.0]
+      - name: "clear_time"
+        type: "continuous"
+        bounds: [0.05, 0.50]  # seconds
+
+  # Experiment 2: 4D core comparison
+  4d:
+    dimensions:
+      - name: "fault_bus"
+        type: "categorical"
+        values: [2, 3, 4, 5, 6, 7, 8, 9, 10]
+        bounds: [0.0, 1.0]
+      - name: "clear_time"
+        type: "continuous"
+        bounds: [0.05, 0.50]
+      - name: "load_level_area1"
+        type: "continuous"
+        bounds: [0.8, 1.2]
+        description: "Scaling factor for Area 1 loads"
+      - name: "line_trip"
+        type: "categorical"
+        values: ["none", "Line_4", "Line_5", "Line_6", "Line_0"]
+        bounds: [0.0, 1.0]
+
+  # Experiment 3: 6D high-dimensional
+  6d:
+    dimensions:
+      - name: "fault_bus"
+        type: "categorical"
+        values: [2, 3, 4, 5, 6, 7, 8, 9, 10]
+        bounds: [0.0, 1.0]
+      - name: "clear_time"
+        type: "continuous"
+        bounds: [0.05, 0.50]
+      - name: "load_level_area1"
+        type: "continuous"
+        bounds: [0.8, 1.2]
+      - name: "line_trip"
+        type: "categorical"
+        values: ["none", "Line_4", "Line_5", "Line_6", "Line_0"]
+        bounds: [0.0, 1.0]
+      - name: "load_level_area2"
+        type: "continuous"
+        bounds: [0.8, 1.2]
+      - name: "gen1_output_scale"
+        type: "continuous"
+        bounds: [0.5, 1.1]
