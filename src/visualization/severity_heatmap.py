@@ -4,7 +4,8 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
+
+from src.visualization.style_config import save_figure
 
 
 def plot_severity_heatmap(
@@ -58,5 +59,5 @@ def plot_severity_heatmap(
     ax.set_title("Severity Landscape with BO Sampling Trajectory")
 
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
+    stem = Path(output_path).stem
+    save_figure(fig, stem)

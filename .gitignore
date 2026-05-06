@@ -11,3 +11,5 @@ experiment.log
 kundur_*_out.*
 gh.exe
 search_openalex*
+__pycache__/
+.claude/

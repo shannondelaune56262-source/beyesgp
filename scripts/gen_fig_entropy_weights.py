@@ -4,13 +4,12 @@ import io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'DejaVu Sans']
-plt.rcParams['axes.unicode_minus'] = False
-plt.rcParams['figure.dpi'] = 300
+from src.visualization.style_config import apply_csee_style, save_figure
+
+apply_csee_style()
 
 levels = np.array([0, 1, 2, 3, 4])
 labels = ['Level 0\n(0%)', 'Level 1\n(15%)', 'Level 2\n(30%)', 'Level 3\n(45%)', 'Level 4\n(60%)']
@@ -46,6 +45,5 @@ ax.annotate('双约束\n过渡', xy=(2.0, 0.68), fontsize=9, ha='center', color=
 ax.annotate('多约束耦合', xy=(3.5, 0.68), fontsize=10, ha='center', color='red')
 
 fig.tight_layout()
-fig.savefig('C:/pscad/beyesgp/paper/figures/fig4_entropy_weights.png', dpi=300, bbox_inches='tight')
-fig.savefig('C:/pscad/beyesgp/paper/figures/fig4_entropy_weights.pdf', bbox_inches='tight')
+save_figure(fig, "fig4_entropy_weights")
 print("fig4 saved successfully")

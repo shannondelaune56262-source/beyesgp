@@ -4,21 +4,20 @@ import sys
 import io
 
 import matplotlib
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from pathlib import Path
 from scipy.special import expit as sigmoid
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 
+from src.visualization.style_config import apply_csee_style, save_figure, CLUSTER_COLORS
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-sns.set_style("whitegrid")
-sns.set_context("paper", font_scale=1.2)
-COLORS = sns.color_palette("deep")
+apply_csee_style()
+COLORS = CLUSTER_COLORS
 
 output_dir = Path("data/figures")
 output_dir.mkdir(parents=True, exist_ok=True)
@@ -40,9 +39,7 @@ def fig_gp_joint_scatter():
     ax.legend()
     ax.set_aspect("equal")
     fig.tight_layout()
-    fig.savefig(output_dir / "fig_gp_joint_scatter.pdf", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "fig_gp_joint_scatter.png", dpi=150, bbox_inches="tight")
-    plt.close(fig)
+    save_figure(fig, "fig_gp_joint_scatter")
     print("Saved fig_gp_joint_scatter")
 
 
@@ -83,9 +80,7 @@ def fig_gp_r2_comparison():
             f"{val:.2f}", ha="center", fontsize=8,
         )
     fig.tight_layout()
-    fig.savefig(output_dir / "fig_gp_r2_comparison.pdf", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "fig_gp_r2_comparison.png", dpi=150, bbox_inches="tight")
-    plt.close(fig)
+    save_figure(fig, "fig_gp_r2_comparison")
     print("Saved fig_gp_r2_comparison")
 
 
@@ -106,9 +101,7 @@ def fig_fault_severity_violin():
     ax.set_ylabel("Severity")
     ax.set_title("Severity Distribution by Fault Type")
     fig.tight_layout()
-    fig.savefig(output_dir / "fig_fault_severity_violin.pdf", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "fig_fault_severity_violin.png", dpi=150, bbox_inches="tight")
-    plt.close(fig)
+    save_figure(fig, "fig_fault_severity_violin")
     print("Saved fig_fault_severity_violin")
 
 
@@ -135,9 +128,7 @@ def fig_worst_fault_distribution():
         if cnt > 0:
             ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1, str(cnt), ha="center", fontsize=9)
     fig.tight_layout()
-    fig.savefig(output_dir / "fig_worst_fault_distribution.pdf", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "fig_worst_fault_distribution.png", dpi=150, bbox_inches="tight")
-    plt.close(fig)
+    save_figure(fig, "fig_worst_fault_distribution")
     print("Saved fig_worst_fault_distribution")
 
 
@@ -182,9 +173,7 @@ def fig_tiered_limits_comparison():
     ax.set_title("Tiered Limits: Linear vs Sigmoid vs Per-Fault")
     ax.legend()
     fig.tight_layout()
-    fig.savefig(output_dir / "fig_tiered_limits_comparison.pdf", dpi=300, bbox_inches="tight")
-    fig.savefig(output_dir / "fig_tiered_limits_comparison.png", dpi=150, bbox_inches="tight")
-    plt.close(fig)
+    save_figure(fig, "fig_tiered_limits_comparison")
     print("Saved fig_tiered_limits_comparison")
 
 

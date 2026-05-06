@@ -22,8 +22,8 @@ import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.collections import LineCollection
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
@@ -32,31 +32,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
 logger = logging.getLogger(__name__)
 
-# CSEE style settings — SimSun for Chinese, Times New Roman for Latin/math
-rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei"]
-rcParams["font.serif"] = ["SimSun", "Times New Roman"]
-rcParams["font.family"] = "serif"
-rcParams["font.size"] = 9
-rcParams["axes.unicode_minus"] = False
-rcParams["figure.dpi"] = 300
-rcParams["savefig.dpi"] = 300
-rcParams["savefig.bbox"] = "tight"
+from src.visualization.style_config import (
+    apply_csee_style, PALETTE, CLUSTER_COLORS, save_figure,
+    SAFETY_CMAP_COLORS, FIGURE_DIR,
+)
 
-OUTPUT_DIR = Path("paper/figures")
+apply_csee_style()
+
+OUTPUT_DIR = FIGURE_DIR
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-PALETTE = {
-    "safe": "#4CAF50",
-    "unsafe": "#F44336",
-    "boundary": "#FF9800",
-    "BO": "#2196F3",
-    "Random": "#FF5722",
-    "LHS": "#9E9E9E",
-    "uniform": "#BDBDBD",
-    "linear": "#2196F3",
-    "sigmoid": "#FF9800",
-    "aia": "#4CAF50",
-}
 
 
 def fig3_mogp_r2():
@@ -99,8 +83,7 @@ def fig3_mogp_r2():
         ax.axhline(y=0.7, color="red", linestyle="--", linewidth=0.5, alpha=0.5, label="R²=0.7")
         ax.set_title(f"{cn}\n({en})", fontsize=8)
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig7_gp_r2.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig7_gp_r2.png", format="png")
+    save_figure(fig, "fig7_gp_r2")
     plt.close(fig)
     logger.info("Figure 3 saved")
 
@@ -115,7 +98,7 @@ def fig4_bo_convergence():
     df = pd.read_csv(path)
 
     fig, ax = plt.subplots(figsize=(7, 4.5))
-    colors = {"BO": PALETTE["BO"], "Random": PALETTE["Random"], "LHS": PALETTE["LHS"]}
+    colors = {"BO": PALETTE["bo"], "Random": PALETTE["random"], "LHS": PALETTE["lhs"]}
     labels = {"BO": "贝叶斯优化(BO)", "Random": "随机搜索(Random)", "LHS": "拉丁超立方(LHS)"}
 
     for method in ["BO", "Random", "LHS"]:
@@ -139,8 +122,7 @@ def fig4_bo_convergence():
     ax.grid(True, alpha=0.3)
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig8_bo_convergence.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig8_bo_convergence.png", format="png")
+    save_figure(fig, "fig8_bo_convergence")
     plt.close(fig)
     logger.info("Figure 4 saved")
 
@@ -190,8 +172,7 @@ def fig5_re_impact():
 
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig4_re_impact.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig4_re_impact.png", format="png")
+    save_figure(fig, "fig4_re_impact")
     plt.close(fig)
     logger.info("Figure 5 saved")
 
@@ -218,8 +199,7 @@ def fig6_aia_boundary():
     g1 = hm_df["dim1"].values.reshape(n_grid, n_grid)
 
     # Custom colormap: blue (safe) → yellow (boundary) → red (unsafe)
-    cmap = LinearSegmentedColormap.from_list("safety",
-        ["#1565C0", "#42A5F5", "#FFF176", "#FF8A65", "#C62828"])
+    cmap = LinearSegmentedColormap.from_list("safety", SAFETY_CMAP_COLORS)
     # Use wider range so color gradient is visible despite narrow data range
     vmin = min(0.4, severity_grid.min() - 0.05)
     vmax = max(1.0, severity_grid.max() + 0.05)
@@ -259,8 +239,7 @@ def fig6_aia_boundary():
     ax.legend(fontsize=7, loc="upper left")
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig9_aia_boundary.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig9_aia_boundary.png", format="png")
+    save_figure(fig, "fig9_aia_boundary")
     plt.close(fig)
     logger.info("Figure 6 saved")
 
@@ -301,8 +280,7 @@ def fig7_transfer_limits():
     ax.grid(True, axis="y", alpha=0.3)
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig11_tiered_limits.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig11_tiered_limits.png", format="png")
+    save_figure(fig, "fig11_tiered_limits")
     plt.close(fig)
     logger.info("Figure 7 saved")
 
@@ -320,7 +298,7 @@ def fig10_closed_loop():
 
     # Left panel: Normalized volume growth ratio (relative to round 1)
     ax = axes[0]
-    cmap = plt.cm.tab10
+    cmap = CLUSTER_COLORS
 
     for i, ((fault, cluster), group) in enumerate(
         df.groupby(["fault_name", "cluster_id"])
@@ -333,7 +311,7 @@ def fig10_closed_loop():
         else:
             ratio = np.ones_like(vols) * 100
         ax.plot(rounds, ratio, marker="o", label=label,
-                linewidth=1.5, color=cmap(i % 10), markersize=4)
+                linewidth=1.5, color=cmap[i % len(cmap)], markersize=4)
 
     ax.set_xlabel("迭代轮次 / Iteration round", fontsize=9)
     ax.set_ylabel("相对体积 / Relative volume (% of Round 1)", fontsize=9)
@@ -367,8 +345,7 @@ def fig10_closed_loop():
 
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig10_closed_loop.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig10_closed_loop.png", format="png")
+    save_figure(fig, "fig10_closed_loop")
     plt.close(fig)
     logger.info("Figure 8 saved")
 
@@ -407,23 +384,28 @@ def fig9_parallel_coordinates():
 
     norm_cols = [c + "_norm" for c in col_names]
     clusters = sorted(df_plot["cluster"].unique())
-    cmap = plt.cm.tab10
+    cmap = CLUSTER_COLORS
 
     fig, ax = plt.subplots(figsize=(14, 5))
 
-    # Draw each line colored by cluster
+    # Draw each line colored by cluster (LineCollection for efficiency)
+    x_vals = np.arange(len(dims))
     for c in clusters:
         sub = df_plot[df_plot["cluster"] == c]
-        color = cmap(c % 10)
+        color = cmap[c % len(cmap)]
+        segments = []
         for _, row in sub.iterrows():
-            y = [row[nc] for nc in norm_cols]
-            ax.plot(range(len(dims)), y, color=color, alpha=0.25, linewidth=0.8)
+            y_vals = [row[nc] for nc in norm_cols]
+            segments.append(np.column_stack([x_vals, y_vals]))
+        lc = LineCollection(segments, colors=[color] * len(segments),
+                            alpha=0.25, linewidths=0.8)
+        ax.add_collection(lc)
 
     # Overlay cluster means with thicker lines
     for c in clusters:
         sub = df_plot[df_plot["cluster"] == c]
         means = [sub[nc].mean() for nc in norm_cols]
-        color = cmap(c % 10)
+        color = cmap[c % len(cmap)]
         ax.plot(range(len(dims)), means, color=color, linewidth=2.5, marker="o",
                 markersize=5, label=f"C{c} (n={len(sub)})", zorder=10)
 
@@ -445,9 +427,7 @@ def fig9_parallel_coordinates():
     ax.grid(True, axis="x", alpha=0.3, linewidth=0.5)
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig3_parallel_coords.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig3_parallel_coords.png", format="png")
-    plt.close(fig)
+    save_figure(fig, "fig3_parallel_coords", dpi=100)
     logger.info("Figure 9 saved")
 
 
@@ -472,7 +452,7 @@ def fig10_radar_chart():
     angles = np.linspace(0, 2 * np.pi, N, endpoint=False).tolist()
     angles += angles[:1]
 
-    cmap = plt.cm.tab10
+    cmap = CLUSTER_COLORS
     fig, ax = plt.subplots(figsize=(7, 6), subplot_kw=dict(polar=True))
 
     linestyles = ["-", "--", "-.", ":", (0, (3, 1, 1, 1)), (0, (5, 2))]
@@ -481,7 +461,7 @@ def fig10_radar_chart():
     for idx, c in enumerate(clusters):
         values = centroids.loc[c, constraints].values.tolist()
         values += values[:1]
-        color = cmap(c % 10)
+        color = cmap[c % len(cmap)]
         ax.plot(angles, values, color=color, linewidth=2,
                 linestyle=linestyles[idx % len(linestyles)],
                 marker=markers[idx % len(markers)], markersize=6,
@@ -507,13 +487,12 @@ def fig10_radar_chart():
             ax.annotate(f"{v:.2f}",
                         xy=(angle_rad, v + offset),
                         fontsize=5.5, ha="center", va="bottom",
-                        color=cmap(c % 10), fontweight="bold")
+                        color=cmap[c % len(cmap)], fontweight="bold")
 
     ax.legend(fontsize=7, loc="upper right", bbox_to_anchor=(1.25, 1.1), framealpha=0.9)
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig6_radar_chart.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig6_radar_chart.png", format="png")
+    save_figure(fig, "fig6_radar_chart")
     plt.close(fig)
     logger.info("Figure 10 saved")
 
@@ -625,8 +604,7 @@ def fig12_severity_limit_curve():
 
     # title removed — figure name goes in paper caption below figure
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "fig12_severity_limit_adaptivity.pdf", format="pdf")
-    fig.savefig(OUTPUT_DIR / "fig12_severity_limit_adaptivity.png", format="png")
+    save_figure(fig, "fig12_severity_limit_adaptivity")
     plt.close(fig)
     logger.info("Figure 12 saved")
 

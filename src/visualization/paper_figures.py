@@ -11,13 +11,13 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
+
+from src.visualization.style_config import apply_csee_style, save_figure, CLUSTER_COLORS
 
 logger = logging.getLogger(__name__)
 
-sns.set_style("whitegrid")
-sns.set_context("paper", font_scale=1.2)
-COLORS = sns.color_palette("deep")
+apply_csee_style()
+COLORS = CLUSTER_COLORS
 
 
 def generate_all_figures(results_dir: str, output_dir: str = "data/figures"):
@@ -113,9 +113,9 @@ def plot_clustering_scatter(df: pd.DataFrame, output_path: Path):
     ax.set_title("Operating Mode Clustering (PCA Projection)")
     ax.legend(loc="best", fontsize=8)
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")
 
 
 def plot_severity_distribution(df: pd.DataFrame, output_path: Path):
@@ -137,9 +137,9 @@ def plot_severity_distribution(df: pd.DataFrame, output_path: Path):
     ax.set_ylabel("Severity")
     ax.set_title("Severity Distribution by Cluster")
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")
 
 
 def plot_tiered_limits(limits_df: pd.DataFrame, output_path: Path):
@@ -167,9 +167,9 @@ def plot_tiered_limits(limits_df: pd.DataFrame, output_path: Path):
                     f"+{pct:.1f}%", ha="center", fontsize=8, color="green")
 
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")
 
 
 def plot_convergence_curves(
@@ -196,9 +196,9 @@ def plot_convergence_curves(
     ax.set_xlim(left=1)
 
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")
 
 
 def plot_gp_scatter(gp_data: dict, output_path: Path):
@@ -219,9 +219,9 @@ def plot_gp_scatter(gp_data: dict, output_path: Path):
     ax.set_aspect("equal")
 
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")
 
 
 def plot_dimension_efficiency(dim_results: dict, output_path: Path):
@@ -251,9 +251,9 @@ def plot_dimension_efficiency(dim_results: dict, output_path: Path):
     ax2.legend()
 
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")
 
 
 def plot_binding_constraint_map(df: pd.DataFrame, output_path: Path):
@@ -284,9 +284,9 @@ def plot_binding_constraint_map(df: pd.DataFrame, output_path: Path):
     ax.set_title("Binding Constraint per Cluster")
     ax.legend(loc="best", fontsize=8)
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")
 
 
 def plot_per_constraint_limits(limits_df: pd.DataFrame, output_path: Path):
@@ -316,6 +316,6 @@ def plot_per_constraint_limits(limits_df: pd.DataFrame, output_path: Path):
     ax.set_title("Per-Constraint Transfer Limits by Cluster")
     ax.legend()
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
-    logger.info(f"Saved: {output_path}")
+    stem = output_path.stem
+    save_figure(fig, stem)
+    logger.info(f"Saved: {stem}")

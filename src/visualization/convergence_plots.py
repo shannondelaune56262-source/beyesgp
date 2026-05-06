@@ -4,7 +4,8 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
+
+from src.visualization.style_config import save_figure
 
 
 def plot_convergence_curves(
@@ -19,7 +20,6 @@ def plot_convergence_curves(
         results_by_method: {method_name: [convergence_array_per_seed, ...]}
         output_path: Save path for the figure.
     """
-    sns.set_style("whitegrid")
     fig, ax = plt.subplots(figsize=figsize)
 
     for method, curves in results_by_method.items():
@@ -38,5 +38,5 @@ def plot_convergence_curves(
     ax.set_xlim(left=1)
 
     fig.tight_layout()
-    fig.savefig(output_path, dpi=300, bbox_inches="tight")
-    plt.close(fig)
+    stem = Path(output_path).stem
+    save_figure(fig, stem)
