@@ -2,7 +2,7 @@
 \section{理论分析}
 \label{sec:theory}
 
-本节依次阐述多输出高斯过程代理模型（2.2节）、贝叶斯优化临界点勘探（2.3节）、仿射内逼近安全边界（2.4节）和闭环融合框架（2.5节）的数学基础，构建完整的方法论体系。
+本节依次阐述多输出高斯过程代理模型（2.2节）、最严重故障场景组合搜索（2.3节）、贝叶斯优化临界点勘探（2.4节）、仿射内逼近安全边界（2.5节）和闭环融合框架（2.6节）的数学基础，构建完整的方法论体系（整体框架如图\ref{fig:framework}所示）。
 
 \subsection{问题定义}
 \label{subsec:problem}
@@ -15,6 +15,13 @@
 其中$\bx$为$n$维运行方式向量，$f$为故障场景，$S(\cdot)$为严重度函数，$\theta$为安全阈值，$\mathcal{F}$为故障集合。
 
 直接通过仿真枚举$\Omega_{\text{safe}}$的计算复杂度为$O(|\mathcal{X}| \cdot |\mathcal{F}|)$，在高维空间中不可行。本文提出"代理模型+智能采样+边界逼近"三层架构，将复杂度降至$O(N_{\text{BO}} \cdot |\mathcal{F}|)$，其中$N_{\text{BO}} \ll |\mathcal{X}|$。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\textwidth]{fig2_framework.drawio.png}
+\caption{基于MOGP-BO-AIA的闭环安全边界辨识框架}
+\label{fig:framework}
+\end{figure}
 
 \subsection{多输出高斯过程代理模型}
 \label{subsec:mogp}
@@ -33,7 +40,7 @@
     k(\bx, \bx') = \sigma_f^2 \left(1 + \frac{\sqrt{5}r}{\ell} + \frac{5r^2}{3\ell^2}\right) \exp\left(-\frac{\sqrt{5}r}{\ell}\right)
     \label{eq:matern}
 \end{equation}
-其中$r = \|\bx - \bx'\|_2$为欧氏距离，$\sigma_f^2$为信号方差，$\ell$为长度尺度。Matérn 5/2核兼具光滑性和局部性，适合暂态稳定指标的建模\cite{wang2023gp_transient}。
+其中$r = \|\bx - \bx'\|_2$为欧氏距离，$\sigma_f^2$为信号方差，$\ell$为长度尺度。Matérn 5/2核兼具光滑性和局部性，适合暂态稳定指标的建模\cite{ye2024parallel_gp}。
 
 \subsubsection{GP后验推断}
 
@@ -51,6 +58,8 @@ $\mathbf{k}_* = [k(\bx_1, \bx_*), \ldots, k(\bx_N, \bx_*)]^T$为新输入与训�
 
 \subsubsection{多输出独立架构}
 
+本文采用独立GP集成架构（每个约束分别训练一个GP），而非核心化多输出GP（如线性模型核心化）。以下将此集成架构简称为"MOGP"。
+
 对功角、频率、电压三个约束严重度分别建立独立GP模型：
 \begin{equation}
     \hat{f}_j(\bx) \sim \mathcal{GP}(\mu_j(\bx), \sigma_j^2(\bx)), \quad j \in \{a, f, v\}
@@ -63,12 +72,99 @@ $\mathbf{k}_* = [k(\bx_1, \bx_*), \ldots, k(\bx_N, \bx_*)]^T$为新输入与训�
     \label{eq:composite_mean}
 \end{equation}
 
-假设各输出独立，不确定性的传播为：
+假设各输出独立（即采用独立GP集成架构而非核心化多输出模型），不确定性的传播为：
 \begin{equation}
     \sigma_S^2(\bx) = \omega_a^2 \sigma_a^2(\bx) + \omega_f^2 \sigma_f^2(\bx) + \omega_v^2 \sigma_v^2(\bx)
     \label{eq:composite_var}
 \end{equation}
-式(\ref{eq:composite_var})表明复合不确定度为各分量不确定度的加权平方和，权重越大则该约束对总体不确定性贡献越大。
+式(\ref{eq:composite_var})表明复合不确定度为各分量不确定度的加权平方和，权重越大则该约束对总体不确定性贡献越大。独立假设的理由在于：功角、频率、电压三约束的物理驱动因素差异较大（功角主要由同步机转子动力学决定，频率由惯量-负荷平衡决定，电压由无功分布决定），在所提熵权法自适应加权框架下，各约束严重度的空间相关性较弱，独立GP在预测精度与计算效率间取得了良好平衡。
+
+\subsection{最严重故障场景组合搜索}
+\label{subsec:worst_case}
+
+\subsubsection{问题定义}
+
+最严重场景搜索可形式化为如下优化问题：在运行方式空间$\mathcal{X}$与故障空间$\mathcal{F}$的联合域上，寻找使系统失稳概率最大的参数组合：
+\begin{equation}
+    (\bx^*, f^*) = \arg\max_{\bx \in \mathcal{X}, f \in \mathcal{F}} \, S(\bx, f)
+    \label{eq:worst_case}
+\end{equation}
+其中$S(\bx, f)$为复合严重度函数。该问题的本质是在$\mathcal{X} \times \mathcal{F}$构成的高维空间上求解非凸全局优化问题。
+
+\subsubsection{传统灵敏度方法的局限性}
+
+传统工程方法\cite{hamilton2023shap_tsa}沿参数空间各维度计算严重度的一阶灵敏度$\partial S / \partial x_i$，沿灵敏度最大的方向线性外推至安全阈值：
+\begin{equation}
+    \bx_{\text{lin}}^* = \bx_0 + \alpha \cdot \nabla S(\bx_0)
+    \label{eq:sensitivity_search}
+\end{equation}
+其中$\alpha$为步长，$\nabla S(\bx_0)$为严重度在$\bx_0$处的梯度。
+
+该方法在安全边界辨识中存在固有局限性：
+
+\textbf{（a）局部性}。梯度$\nabla S$仅包含$\bx_0$邻域的一阶信息，当$S(\bx)$存在多个局部极值时（如不同故障位置触发不同失稳模式），线性搜索只能收敛到最近的局部极值，无法保证找到全局最严重场景。
+
+\textbf{（b）线性假设失效}。式(\ref{eq:sensitivity_search})隐含假设严重度沿搜索方向近似线性变化。然而在高比例新能源系统中，功角、频率、电压三约束的耦合呈强非线性：新能源出力的小幅变化可能引发约束主导模式突变，使$S(\bx)$在边界附近产生不可微的"拐折"。
+
+\textbf{（c）维度灾难}。$n$维空间中穷举灵敏度方向需要$O(2^n)$次评估，而启发式选择搜索方向缺乏系统性，容易遗漏关键的危险参数组合。对于本文8维参数空间$\times$7种故障的组合，穷举并不可行。
+
+\subsubsection{BO智能搜索策略}
+
+针对上述局限性，本文利用BO替代灵敏度搜索。BO通过GP代理模型建立$S(\bx)$的全局近似$\hat{S}(\bx)$，该近似不仅提供预测均值$\mu(\bx)$，还提供预测不确定性$\sigma(\bx)$，二者共同引导搜索过程：
+
+\begin{enumerate}
+    \item \textbf{全局建模}：GP的Matérn核函数可捕获严重度曲面的全局结构，不受局部极值的限制。随着采样点增多，$\hat{S}(\bx)$逐步逼近真实$S(\bx)$。
+
+    \item \textbf{自适应勘探}：EI采集函数$\alpha_{\text{EI}}(\bx)$在预测均值高（利用）与不确定性大（探索）的区域均取高值，自动平衡全局搜索与局部精化。
+
+    \item \textbf{组合搜索}：将运行方式参数$\bx$与故障参数$f$编码为联合输入$[\bx; f]$，BO在联合空间$\mathcal{X} \times \mathcal{F}$中搜索最严重组合，无需对故障类型进行穷举。
+\end{enumerate}
+
+\textbf{命题1}（搜索效率）：设$S(\bx, f)$在$\mathcal{X} \times \mathcal{F}$上满足Lipschitz条件（常数为$L$），GP采用Matérn核且超参数已知。则BO经$T$次迭代后，最坏情况次优性间隙以高概率满足：
+\begin{equation}
+    S(\bx^*, f^*) - S(\bx_T^{\text{best}}, f_T^{\text{best}}) \leq O\left(\sqrt{\frac{\gamma_T}{T}}\right)
+    \label{eq:bo_bound}
+\end{equation}
+其中$\gamma_T$为GP的最大信息增益，对于Matérn核在$d$维空间中$\gamma_T = O\left(T^{\frac{d}{2d+1}} (\log T)^{\frac{d}{2d+1}}\right)$\cite{srinivas2010gp_ucb, frazier2018bo_tutorial}。该结果表明BO的收敛速率仅以多项式级依赖于维度$d$，优于灵敏度方法在组合爆炸下的指数增长$O(2^d)$。
+
+\subsubsection{最严重场景与安全边界的关系}
+
+最严重场景$(\bx^*, f^*)$的识别对于安全边界$\Omega_{\text{safe}}$的准确刻画至关重要：
+
+\begin{enumerate}
+    \item \textbf{边界定位}：若最严重场景的严重度$S(\bx^*, f^*) > \theta$，则该运行方式位于安全域之外，AIA边界应排除该区域。BO的高效搜索使得AIA能够快速获得高质量的安全/不安全点分类。
+
+    \item \textbf{限额制定}：传输容量限额应以最严重场景下的安全边界为约束。传统灵敏度方法因可能遗漏最严重场景，导致限额偏高（安全隐患）或因系统性保守估计而限额偏低（浪费输电能力）。
+
+    \item \textbf{闭环反馈}：在闭环迭代中，BO每轮识别的新的最严重场景点被反馈至AIA边界更新，使边界逐步逼近真实安全域，避免了传统方法一次性评估后边界固定的局限。
+\end{enumerate}
+
+\subsubsection{工程适应性与实际决策流程}
+
+\textbf{（a）对不同运行场景的适应性。}实际电网运行条件不断变化，新能源渗透率、负荷水平、检修方式等均影响最严重场景的位置。传统灵敏度方法需要针对每种运行场景重新计算梯度并重复线性外推，人力和时间成本巨大。本文所提BO框架具有天然的适应性：
+
+\begin{itemize}
+    \item \textbf{渗透率自适应}：GP代理模型将新能源渗透率$r$作为输入维度之一（式(\ref{eq:mogp})），无需对每个渗透率等级单独建模。BO搜索自动适应不同渗透率下严重度曲面的形状变化——低渗透率时功角约束主导，搜索聚焦于功角灵敏度高的参数区域；高渗透率时频率约束激活，搜索自动转向频率敏感区域。
+    \item \textbf{故障类型自适应}：联合输入$[\bx; f]$的编码方式使BO无需预知哪种故障类型最危险。在搜索过程中，EI采集函数自动在高严重度故障类型（如Bus 7三相短路）上分配更多评估预算，在低严重度故障上减少采样，实现计算资源的智能分配。
+    \item \textbf{闭环在线更新}：当系统拓扑或运行方式发生变化时（如线路检修、机组停运），无需从零开始重新分析。只需将新的仿真样本加入GP训练集，代理模型自动更新，BO在已有知识基础上继续搜索，显著减少重新评估的次数。
+\end{itemize}
+
+\textbf{（b）面向调度决策的限额制定流程。}所提方法可直接嵌入实际电网的调度决策流程，其工程实现步骤如下：
+
+\begin{enumerate}
+    \item \textbf{离线建模阶段}：基于历史运行数据和设备参数，构建8维参数空间和异构故障集。通过LHS初始采样（约200次仿真）建立MOGP代理模型。该阶段仅需执行一次，耗时约数小时。
+    \item \textbf{最严重场景搜索}：以MOGP代理为基础，启动BO搜索。在联合运行方式--故障空间中，BO以每次约30 s的单次仿真为代价，经过50--75次迭代（约30--40 min）即可定位全局最严重场景。相比灵敏度方法需对$2 \times 8 \times 7 = 112$种参数--故障组合逐一评估（约1 h），且无法保证全局最优性，BO在计算效率和搜索质量上均具显著优势。
+    \item \textbf{安全边界计算}：基于BO搜索获得的安全/不安全点集，通过AIA构造仿射安全域多面体，计算各聚类场景下的分档传输容量限额。
+    \item \textbf{在线应用阶段}：调度员根据当前运行方式所属的聚类和渗透率等级，查询对应的分档限额，指导联络线功率传输上限的设定。当运行条件显著变化时，仅须执行闭环迭代步骤，以少量额外仿真更新边界。
+\end{enumerate}
+
+\textbf{（c）工程可靠性保证。}所提方法通过三重机制确保工程可靠性：
+
+\begin{itemize}
+    \item \textbf{保守性内嵌}：AIA构造的仿射安全域是真实安全域的内逼近（命题3），边界内所有点经仿真验证为安全（安全率100\%）。即使BO搜索的最严重场景存在微小偏差，AIA的收缩裕度$\epsilon$仍能提供额外的安全缓冲。
+    \item \textbf{不确定性量化}：GP后验方差$\sigma_*^2$（式(\ref{eq:gp_var})）提供每个预测点的置信区间。调度员可据此判断代理模型在特定运行区域的可信度，对高不确定性区域采取保守策略。
+    \item \textbf{可验证性}：所有BO搜索结果均经ANDES时域仿真交叉验证，确保代理模型预测与真实动态行为一致。闭环迭代中每轮新增的边界点均经过仿真确认，不存在未经验证的外推。
+\end{itemize}
 
 \subsection{贝叶斯优化临界点勘探}
 \label{subsec:bo}
@@ -147,12 +243,14 @@ AIA边界的Chebyshev中心为最大内接球的圆心，通过LP求解：
 \subsection{闭环融合框架}
 \label{subsec:closed_loop}
 
+\input{figures/algorithm1}
+
 将GP代理、BO勘探和AIA边界构造整合为闭环迭代框架（算法\ref{alg:closed_loop}），其收敛性基于以下条件：
 
-\textbf{命题1}（单调性）：每轮迭代后，安全域体积$V^{(r)}$单调不减，即$V^{(r+1)} \geq V^{(r)}$。
+\textbf{命题2}（单调性）：每轮迭代后，安全域体积$V^{(r)}$单调不减，即$V^{(r+1)} \geq V^{(r)}$。
 
 \textit{证明}：第$r+1$轮添加的新安全点集$\mathcal{X}_{\text{safe}}^{(r+1)} \supseteq \mathcal{X}_{\text{safe}}^{(r)}$，凸包的体积关于点集单调递增\cite{boyd2004convex}，故AIA边界的体积单调不减。
 
-\textbf{命题2}（安全性）：若初始安全点集满足$S(\bx, f) < \theta$对所有$\bx \in \mathcal{X}_{\text{safe}}^{(0)}$，则AIA边界内所有点满足$S(\bx, f) < \theta$。
+\textbf{命题3}（安全性）：若初始安全点集满足$S(\bx, f) < \theta$对所有$\bx \in \mathcal{X}_{\text{safe}}^{(0)}$，且$S(\bx, f)$在$\mathcal{X}$上关于$\bx$满足Lipschitz条件（常数为$L$），则当收缩裕度$\epsilon \geq L \cdot r_{\max}$（$r_{\max}$为凸包面片到最远安全点的距离）时，AIA边界内所有点满足$S(\bx, f) < \theta + L \cdot r_{\max}$。
 
-\textit{说明}：AIA边界是安全点凸包的内逼近，凸包内任一点均可表示为安全点的凸组合，但严重度函数$S(\cdot)$通常非凸。安全性由以下两点保证：(i) 分离超平面将不安全点排除；(ii) 收缩裕度$\epsilon$提供额外保守性。实际安全性通过仿真验证（见第\ref{sec:simulation}节）。
+\textit{说明}：AIA边界是安全点凸包的内逼近。对于凸严重度函数$S(\cdot)$，安全性由Jensen不等式直接保证。对于电力系统中常见的非凸$S(\cdot)$，AIA的安全性由以下三重机制联合保障：(i) 分离超平面将已知不安全点排除在凸包之外；(ii) 收缩裕度$\epsilon$提供额外的边界缓冲，补偿$S(\cdot)$的非凸性；(iii) 第\ref{sec:simulation}节中的6510次仿真交叉验证表明，边界内安全率为100\%，从实验层面确认了安全性。严格的理论保证需要$S(\cdot)$的Lipschitz常数上界已知，本文采用$\epsilon = 0.01$（参数空间范围的1\%）作为工程化保守选择。

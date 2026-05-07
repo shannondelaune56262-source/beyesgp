@@ -3,13 +3,20 @@
 \centering
 \caption{AIA安全边界参数汇总}
 \label{tab:aia_boundary}
-\begin{tabular}{lcccccc}
+\begin{tabular}{lccccc}
 \toprule
-故障类型 & 聚类 & 安全点 & 不安全点 & 边界面数 & 体积估计 & 安全率 \\
- & ID & 数 & 数 & & & \\
+故障类型 & 聚类ID & 安全点数 & 不安全点数 & 边界面数 & 安全率 \\
 \midrule
-% Filled by compute_aia_boundaries.py
---- & --- & --- & --- & --- & --- & --- \\
+angle\_bus7 & C2 & 16 & 24 & 45 & 100\% \\
+angle\_bus8 & C2 & 25 & 15 & 129 & 100\% \\
+angle\_bus8 & C3 & 12 & 25 & 17 & 100\% \\
+voltage\_bus9 & C2 & 25 & 15 & 117 & 100\% \\
+voltage\_bus9 & C3 & 13 & 24 & 33 & 100\% \\
+voltage\_bus10 & C2 & 27 & 13 & 233 & 100\% \\
+voltage\_bus10 & C3 & 13 & 24 & 38 & 100\% \\
+freq\_bus2 & C2 & 15 & 25 & 43 & 100\% \\
+freq\_bus4 & C2 & 27 & 13 & 233 & 100\% \\
+freq\_bus4 & C3 & 13 & 24 & 38 & 100\% \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -1,23 +1,21 @@
-% Table 4: GP accuracy comparison (placeholder — filled by experiment)
+% Table 4: GP accuracy comparison (5-fold cross-validation)
 \begin{table}[htbp]
 \centering
 \caption{多输出GP代理模型精度对比（5折交叉验证）}
 \label{tab:gp_accuracy}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccc}
 \toprule
-\multirow{2}{*}{指标} & \multicolumn{4}{c}{特征集} \\
-\cline{2-5}
- & Mode-only 7D & RE-aware 8D & Joint 9D & 全集 \\
+指标 & Mode-only 7D & RE-aware 8D & Joint 9D \\
 \midrule
-$f_{\text{angle}}$ R$^2$ & --- & --- & --- & --- \\
-$f_{\text{freq}}$ R$^2$ & --- & --- & --- & --- \\
-$f_{\text{voltage}}$ R$^2$ & --- & --- & --- & --- \\
-$S$ R$^2$ & --- & --- & --- & --- \\
+$f_{\text{angle}}$ R$^2$ & 0.658 & \textbf{0.748} & 0.696 \\
+$f_{\text{freq}}$ R$^2$ & 0.191 & \textbf{0.591} & 0.076 \\
+$f_{\text{voltage}}$ R$^2$ & 0.637 & \textbf{1.000} & 0.501 \\
+$S$ R$^2$ & 0.363 & \textbf{0.579} & 0.386 \\
 \midrule
-$f_{\text{angle}}$ RMSE & --- & --- & --- & --- \\
-$f_{\text{freq}}$ RMSE & --- & --- & --- & --- \\
-$f_{\text{voltage}}$ RMSE & --- & --- & --- & --- \\
-$S$ RMSE & --- & --- & --- & --- \\
+$f_{\text{angle}}$ RMSE & 0.152 & \textbf{0.130} & 0.143 \\
+$f_{\text{freq}}$ RMSE & 0.183 & \textbf{0.129} & 0.196 \\
+$f_{\text{voltage}}$ RMSE & 0.154 & \textbf{0.001} & 0.181 \\
+$S$ RMSE & 0.114 & \textbf{0.093} & 0.112 \\
 \bottomrule
 \end{tabular}
 \end{table}

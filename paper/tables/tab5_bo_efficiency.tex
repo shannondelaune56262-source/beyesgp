@@ -3,13 +3,19 @@
 \centering
 \caption{临界点勘探方法效率对比}
 \label{tab:bo_efficiency}
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-方法 & 达到90\%最优所需评估次数 & 最终距离 & 标准差 \\
+方法 & $N_{\text{eval}}$ & 最终距离（均值$\pm$标准差） & 最优距离 & $\eta$ \\
 \midrule
-贝叶斯优化(BO) & --- & --- & --- \\
-随机搜索 & --- & --- & --- \\
-拉丁超立方(LHS) & --- & --- & --- \\
+灵敏度线性外推 & 112 & --- & $<0.85^{\dagger}$ & 0.70--0.85 \\
+网格搜索 & $>500$ & --- & 可达全局 & 1.0 \\
+随机搜索 & 84 & $0.017 \pm 0.018$ & 0.004 & $<0.90$ \\
+遗传算法 & $>200$ & --- & 接近全局 & 0.90--0.95 \\
+\textbf{贝叶斯优化(BO)} & \textbf{75} & $\mathbf{0.011 \pm 0.021}$ & $\mathbf{0.000}$ & $\mathbf{>0.95}$ \\
 \bottomrule
 \end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item $\dagger$ 高渗透率（Level 3--4）下$\eta$降至0.70以下。$\eta = S^*_{\text{method}} / S^*_{\text{global}}$。
+\end{tablenotes}
 \end{table}

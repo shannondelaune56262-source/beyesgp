@@ -1,15 +1,21 @@
 % Table 7: Tiered transfer limits comparison
 \begin{table}[htbp]
 \centering
-\caption{分场景传输容量限额对比}
+\caption{分场景传输容量限额对比（RE+同步机5维聚类）}
 \label{tab:transfer_limits}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-聚类 & 样本数 & 统一限额 & 线性聚类 & Sigmoid聚类 & AIA边界 \\
- & & (p.u.) & (p.u.) & (p.u.) & (p.u.) \\
+聚类 & 样本数 & $\bar{S}$ & 统一限额 & Sigmoid限额 & AIA限额 & AIA提升 \\
+ & & & (p.u.) & (p.u.) & (p.u.) & (\%) \\
 \midrule
-% Filled by compute_transfer_limits.py
---- & --- & --- & --- & --- & --- \\
+C0（低） & 28 & 0.681 & 0.402 & 0.583 & \textbf{0.757} & +88.4 \\
+C1 & 38 & 0.690 & 0.402 & 0.565 & \textbf{0.730} & +81.6 \\
+C2 & 28 & 0.725 & 0.402 & 0.506 & \textbf{0.644} & +60.1 \\
+C3 & 24 & 0.739 & 0.402 & 0.489 & \textbf{0.583} & +45.0 \\
+C4 & 26 & 0.750 & 0.402 & 0.477 & \textbf{0.620} & +54.1 \\
+C5（高） & 36 & 0.774 & 0.402 & 0.455 & \textbf{0.591} & +47.1 \\
+\midrule
+加权平均 & 180 & 0.728 & 0.402 & 0.510 & \textbf{0.658} & \textbf{+63.6} \\
 \bottomrule
 \end{tabular}
 \end{table}
