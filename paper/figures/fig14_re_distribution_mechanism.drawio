@@ -1,0 +1,239 @@
+<mxfile host="app.diagrams.net" agent="draw.io" version="24.0.0">
+  <diagram id="re_distribution_mechanism" name="RE Distribution Mechanism">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="Causal Mechanism: RE Spatial Distribution &amp;rarr; Transfer Limits" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1A1A2E;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="250" y="10" width="700" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="col_header_west" value="WEST Concentrated&lt;br&gt;re_west_fraction = 1.0" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#2E7D32;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="80" y="50" width="220" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="col_header_balanced" value="Balanced&lt;br&gt;re_west_fraction = 0.5" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#1565C0;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="430" y="50" width="220" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="col_header_east" value="EAST Concentrated&lt;br&gt;re_west_fraction = 0.0" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#C62828;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="780" y="50" width="220" height="36" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="re_west" value="RE Distribution&lt;br&gt;WEST RE: 100%, EAST RE: 0%" style="rounded=1;whiteSpace=wrap;fillColor=#4CAF50;strokeColor=#388E3C;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=1;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="90" y="100" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="re_balanced" value="RE Distribution&lt;br&gt;WEST RE: 50%, EAST RE: 50%" style="rounded=1;whiteSpace=wrap;fillColor=#4CAF50;strokeColor=#388E3C;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=1;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="100" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="re_east" value="RE Distribution&lt;br&gt;WEST RE: 0%, EAST RE: 100%" style="rounded=1;whiteSpace=wrap;fillColor=#4CAF50;strokeColor=#388E3C;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=1;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="790" y="100" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="row1_label" value="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#4CAF50;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="108" width="24" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arr_west_1to2" value="displaces synchronous gen" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="150" as="sourcePoint"/>
+            <mxPoint x="190" y="210" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_bal_1to2" value="displaces synchronous gen" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="150" as="sourcePoint"/>
+            <mxPoint x="540" y="210" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_east_1to2" value="displaces synchronous gen" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="150" as="sourcePoint"/>
+            <mxPoint x="890" y="210" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="gen_west" value="Synchronous Gen Response&lt;br&gt;WEST gen reduced significantly;&lt;br&gt;EAST gen largely unchanged" style="rounded=1;whiteSpace=wrap;fillColor=#1976D2;strokeColor=#1565C0;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="75" y="210" width="230" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_balanced" value="Synchronous Gen Response&lt;br&gt;Both areas gen reduced&lt;br&gt;proportionally" style="rounded=1;whiteSpace=wrap;fillColor=#1976D2;strokeColor=#1565C0;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="425" y="210" width="230" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="gen_east" value="Synchronous Gen Response&lt;br&gt;EAST gen reduced significantly;&lt;br&gt;WEST gen largely unchanged" style="rounded=1;whiteSpace=wrap;fillColor=#1976D2;strokeColor=#1565C0;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="775" y="210" width="230" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="row2_label" value="2" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#1976D2;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="225" width="24" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arr_west_2to3" value="reduces system strength" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="266" as="sourcePoint"/>
+            <mxPoint x="190" y="326" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_bal_2to3" value="reduces system strength" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="266" as="sourcePoint"/>
+            <mxPoint x="540" y="326" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_east_2to3" value="reduces system strength" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="266" as="sourcePoint"/>
+            <mxPoint x="890" y="326" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="inertia_west" value="System Inertia&lt;br&gt;WEST inertia &amp;darr;&lt;br&gt;EAST inertia unchanged" style="rounded=1;whiteSpace=wrap;fillColor=#FF9800;strokeColor=#F57C00;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="80" y="326" width="220" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="inertia_balanced" value="System Inertia&lt;br&gt;Both areas inertia &amp;darr; moderately" style="rounded=1;whiteSpace=wrap;fillColor=#FF9800;strokeColor=#F57C00;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="430" y="326" width="220" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="inertia_east" value="System Inertia&lt;br&gt;EAST inertia &amp;darr;&amp;darr;&lt;br&gt;(major reduction)" style="rounded=1;whiteSpace=wrap;fillColor=#FF9800;strokeColor=#F57C00;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="780" y="326" width="220" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="row3_label" value="3" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#FF9800;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="340" width="24" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arr_west_3to4" value="changes power flow pattern" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="382" as="sourcePoint"/>
+            <mxPoint x="190" y="442" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_bal_3to4" value="changes power flow pattern" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="382" as="sourcePoint"/>
+            <mxPoint x="540" y="442" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_east_3to4" value="changes power flow pattern" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="382" as="sourcePoint"/>
+            <mxPoint x="890" y="442" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="flow_west" value="Interface Flow&lt;br&gt;WEST import &amp;darr;&amp;darr;&lt;br&gt;Interface may reverse direction&lt;br&gt;(+334 MW)" style="rounded=1;whiteSpace=wrap;fillColor=#D32F2F;strokeColor=#B71C1C;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="65" y="442" width="250" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow_balanced" value="Interface Flow&lt;br&gt;Interface flow moderate&lt;br&gt;(-279 MW)" style="rounded=1;whiteSpace=wrap;fillColor=#D32F2F;strokeColor=#B71C1C;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="425" y="442" width="230" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow_east" value="Interface Flow&lt;br&gt;EAST export capacity &amp;darr;&lt;br&gt;Interface flow drops sharply&lt;br&gt;(-878 MW)" style="rounded=1;whiteSpace=wrap;fillColor=#D32F2F;strokeColor=#B71C1C;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="770" y="442" width="240" height="66" as="geometry"/>
+        </mxCell>
+        <mxCell id="row4_label" value="4" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#D32F2F;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="460" width="24" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arr_west_4to5" value="reduces import demand" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="508" as="sourcePoint"/>
+            <mxPoint x="190" y="568" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_bal_4to5" value="moderate stress" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="508" as="sourcePoint"/>
+            <mxPoint x="540" y="568" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_east_4to5" value="high stress, low inertia" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;fontSize=8;fontColor=#555555;fontFamily=Arial;labelBackgroundColor=#FFFFFF;verticalLabelPosition=right;labelPosition=right;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="508" as="sourcePoint"/>
+            <mxPoint x="890" y="568" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="limit_west" value="Transfer Limit&lt;br&gt;Limit may INCREASE&lt;br&gt;(less stress on tie lines)" style="rounded=1;whiteSpace=wrap;fillColor=#7B1FA2;strokeColor=#6A1B9A;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="75" y="568" width="230" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="limit_balanced" value="Transfer Limit&lt;br&gt;Baseline limit" style="rounded=1;whiteSpace=wrap;fillColor=#7B1FA2;strokeColor=#6A1B9A;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="430" y="568" width="220" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="limit_east" value="Transfer Limit&lt;br&gt;Limit DECREASES&lt;br&gt;(high stress, low inertia)" style="rounded=1;whiteSpace=wrap;fillColor=#7B1FA2;strokeColor=#6A1B9A;strokeWidth=1.5;fontSize=10;fontColor=#FFFFFF;fontStyle=0;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="780" y="568" width="220" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="row5_label" value="5" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1;fontColor=#7B1FA2;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="30" y="580" width="24" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="arr_west_5tobar" value="" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="624" as="sourcePoint"/>
+            <mxPoint x="190" y="690" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_bal_5tobar" value="" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="624" as="sourcePoint"/>
+            <mxPoint x="540" y="690" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arr_east_5tobar" value="" style="endArrow=block;html=1;strokeColor=#555555;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="624" as="sourcePoint"/>
+            <mxPoint x="890" y="690" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="comp_bar_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#F5F5F5;strokeColor=#BDBDBD;strokeWidth=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="680" width="960" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp_higher" value="&amp;#9650; Higher Limit" style="rounded=1;whiteSpace=wrap;fillColor=#4CAF50;strokeColor=#388E3C;strokeWidth=1;fontSize=10;fontColor=#FFFFFF;fontStyle=1;fontFamily=Arial;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="80" y="692" width="200" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp_medium" value="&amp;#9679; Medium Limit" style="rounded=1;whiteSpace=wrap;fillColor=#1976D2;strokeColor=#1565C0;strokeWidth=1;fontSize=10;fontColor=#FFFFFF;fontStyle=1;fontFamily=Arial;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="400" y="692" width="200" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp_lower" value="&amp;#9660; Lower Limit" style="rounded=1;whiteSpace=wrap;fillColor=#D32F2F;strokeColor=#B71C1C;strokeWidth=1;fontSize=10;fontColor=#FFFFFF;fontStyle=1;fontFamily=Arial;arcSize=15;" vertex="1" parent="1">
+          <mxGeometry x="720" y="692" width="200" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="comp_arrow" value="" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="710" as="sourcePoint"/>
+            <mxPoint x="390" y="710" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comp_arrow2" value="" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="710" as="sourcePoint"/>
+            <mxPoint x="710" y="710" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="arr_to_conclusion" value="" style="endArrow=block;html=1;strokeColor=#333333;strokeWidth=2.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="740" as="sourcePoint"/>
+            <mxPoint x="540" y="780" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conclusion" value="&amp;rarr; Flexible limits needed: distribution-dependent differences &amp;gt; 1200 MW" style="rounded=1;whiteSpace=wrap;fillColor=#37474F;strokeColor=#263238;strokeWidth=2;fontSize=12;fontColor=#FFFFFF;fontStyle=1;fontFamily=Arial;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="780" width="680" height="44" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend_box" value="" style="rounded=1;whiteSpace=wrap;fillColor=#FAFAFA;strokeColor=#E0E0E0;strokeWidth=1;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="100" width="160" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_title" value="Legend" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=1;fontColor=#333333;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1085" y="104" width="90" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_re" value="RE Distribution" style="rounded=1;whiteSpace=wrap;fillColor=#4CAF50;strokeColor=#388E3C;strokeWidth=1;fontSize=9;fontColor=#FFFFFF;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="130" width="130" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_gen" value="Syn. Gen Response" style="rounded=1;whiteSpace=wrap;fillColor=#1976D2;strokeColor=#1565C0;strokeWidth=1;fontSize=9;fontColor=#FFFFFF;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="160" width="130" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_inertia" value="System Inertia" style="rounded=1;whiteSpace=wrap;fillColor=#FF9800;strokeColor=#F57C00;strokeWidth=1;fontSize=9;fontColor=#FFFFFF;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="190" width="130" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_flow" value="Interface Flow" style="rounded=1;whiteSpace=wrap;fillColor=#D32F2F;strokeColor=#B71C1C;strokeWidth=1;fontSize=9;fontColor=#FFFFFF;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="220" width="130" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_limit" value="Transfer Limit" style="rounded=1;whiteSpace=wrap;fillColor=#7B1FA2;strokeColor=#6A1B9A;strokeWidth=1;fontSize=9;fontColor=#FFFFFF;fontFamily=Arial;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1065" y="250" width="130" height="24" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

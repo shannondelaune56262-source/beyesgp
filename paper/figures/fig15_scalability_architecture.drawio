@@ -1,0 +1,428 @@
+<mxfile host="app.diagrams.net" agent="draw.io" version="24.0.0">
+  <diagram id="scalability-arch" name="GP+BO+AIA可扩展性验证架构">
+    <mxGraphModel dx="1900" dy="1050" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1050" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ==================== TITLE ==================== -->
+        <mxCell id="title" value="GP+BO+AIA 框架可扩展性验证：从 Kundur 2-Area 到 IEEE 39-Bus" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#1A1A2E;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="350" y="12" width="1200" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- ==================== LEFT BOX: Kundur 2-Area ==================== -->
+        <mxCell id="left_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#E3F2FD;strokeColor=#1565C0;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="30" y="65" width="540" height="850" as="geometry"/>
+        </mxCell>
+
+        <!-- Left header -->
+        <mxCell id="left_header" value="&lt;b style='font-size:15px'&gt;Kundur 2-Area 系统 (验证)&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontColor=#1565C0;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="130" y="75" width="340" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Left system specs -->
+        <mxCell id="left_specs" value="&lt;table cellpadding='2' style='font-size:10px;color:#37474F;font-family:Arial;border:none;'&gt;&lt;tr&gt;&lt;td align='right'&gt;&lt;b&gt;母线:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;11 buses&lt;/td&gt;&lt;td align='right'&gt;&lt;b&gt;发电机:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;4 generators&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align='right'&gt;&lt;b&gt;区域:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;2 areas&lt;/td&gt;&lt;td align='right'&gt;&lt;b&gt;参数空间:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;8D&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="text;html=1;align=center;verticalAlign=middle;overflow=fill;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="80" y="110" width="440" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Left mini system icon: 2-area stick diagram -->
+        <mxCell id="left_icon_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#BBDEFB;strokeColor=#90CAF9;strokeWidth=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="158" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <!-- Area 1 small box -->
+        <mxCell id="left_a1" value="&lt;font style='font-size:9px;color:#1565C0'&gt;&lt;b&gt;Area 1&lt;/b&gt;&lt;br&gt;4 buses&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#1565C0;strokeWidth=1;fontSize=9;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="195" y="170" width="80" height="46" as="geometry"/>
+        </mxCell>
+        <!-- Area 2 small box -->
+        <mxCell id="left_a2" value="&lt;font style='font-size:9px;color:#1565C0'&gt;&lt;b&gt;Area 2&lt;/b&gt;&lt;br&gt;7 buses&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#1565C0;strokeWidth=1;fontSize=9;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="325" y="170" width="80" height="46" as="geometry"/>
+        </mxCell>
+        <!-- Tie lines between areas -->
+        <mxCell id="left_tie1" value="" style="endArrow=none;html=1;strokeColor=#D32F2F;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="275" y="183" as="sourcePoint"/>
+            <mxPoint x="325" y="183" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="left_tie2" value="" style="endArrow=none;html=1;strokeColor=#D32F2F;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="275" y="203" as="sourcePoint"/>
+            <mxPoint x="325" y="203" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== LEFT PIPELINE ==================== -->
+        <!-- Step 1 -->
+        <mxCell id="lp1" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;1&lt;/b&gt; LHS Mode Generation (186 modes)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="248" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 1→2 -->
+        <mxCell id="la1" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="286" as="sourcePoint"/>
+            <mxPoint x="300" y="308" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 2 -->
+        <mxCell id="lp2" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;2&lt;/b&gt; ANDES TDS (6510 sims, 96.8% success)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="308" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 2→3 -->
+        <mxCell id="la2" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="346" as="sourcePoint"/>
+            <mxPoint x="300" y="368" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 3 -->
+        <mxCell id="lp3" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;3&lt;/b&gt; Multi-output GP (R&#178;=0.58~1.0)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="368" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 3→4 -->
+        <mxCell id="la3" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="406" as="sourcePoint"/>
+            <mxPoint x="300" y="428" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 4 -->
+        <mxCell id="lp4" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;4&lt;/b&gt; Bayesian Optimization (46% fewer evals)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="428" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 4→5 -->
+        <mxCell id="la4" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="466" as="sourcePoint"/>
+            <mxPoint x="300" y="488" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 5 -->
+        <mxCell id="lp5" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;5&lt;/b&gt; AIA Boundary (15 boundaries, 100% safe)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="488" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 5→6 -->
+        <mxCell id="la5" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="300" y="526" as="sourcePoint"/>
+            <mxPoint x="300" y="548" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 6 -->
+        <mxCell id="lp6" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;6&lt;/b&gt; Transfer Limits (weighted avg +63.6%)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="548" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Left result badge -->
+        <mxCell id="left_result" value="&lt;font style='font-size:11px;color=#0D47A1;font-family:Arial'&gt;&lt;b&gt;验证结果&lt;/b&gt;: 闭环收敛，AIA 100% 安全域覆盖&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="80" y="600" width="440" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- ==================== RIGHT BOX: IEEE 39-Bus ==================== -->
+        <mxCell id="right_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#E8F5E9;strokeColor=#2E7D32;strokeWidth=2;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="830" y="65" width="540" height="850" as="geometry"/>
+        </mxCell>
+
+        <!-- Right header -->
+        <mxCell id="right_header" value="&lt;b style='font-size:15px'&gt;IEEE 39-Bus 系统 (可扩展性验证)&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;fontColor=#2E7D32;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="930" y="75" width="340" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Right system specs -->
+        <mxCell id="right_specs" value="&lt;table cellpadding='2' style='font-size:10px;color=#37474F;font-family:Arial;border:none;'&gt;&lt;tr&gt;&lt;td align='right'&gt;&lt;b&gt;母线:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;39 buses&lt;/td&gt;&lt;td align='right'&gt;&lt;b&gt;发电机:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;10 generators&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td align='right'&gt;&lt;b&gt;区域:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;2 areas&lt;/td&gt;&lt;td align='right'&gt;&lt;b&gt;参数空间:&lt;/b&gt;&lt;/td&gt;&lt;td&gt;7D&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="text;html=1;align=center;verticalAlign=middle;overflow=fill;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="880" y="110" width="440" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Right mini system icon: larger 2-area diagram -->
+        <mxCell id="right_icon_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#C8E6C9;strokeColor=#A5D6A7;strokeWidth=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="920" y="158" width="360" height="70" as="geometry"/>
+        </mxCell>
+        <!-- West area box -->
+        <mxCell id="right_west" value="&lt;font style='font-size:8px;color=#2E7D32'&gt;&lt;b&gt;West (受端)&lt;/b&gt;&lt;br&gt;18 buses, 5 Gens&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#2E7D32;strokeWidth=1;fontSize=8;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="935" y="170" width="110" height="46" as="geometry"/>
+        </mxCell>
+        <!-- East area box -->
+        <mxCell id="right_east" value="&lt;font style='font-size:8px;color=#2E7D32'&gt;&lt;b&gt;East (送端)&lt;/b&gt;&lt;br&gt;11 buses, 5 Gens&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#2E7D32;strokeWidth=1;fontSize=8;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="170" width="110" height="46" as="geometry"/>
+        </mxCell>
+        <!-- Tie lines -->
+        <mxCell id="right_tie1" value="" style="endArrow=none;html=1;strokeColor=#D32F2F;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1045" y="180" as="sourcePoint"/>
+            <mxPoint x="1145" y="180" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="right_tie2" value="" style="endArrow=none;html=1;strokeColor=#D32F2F;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1045" y="193" as="sourcePoint"/>
+            <mxPoint x="1145" y="193" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="right_tie3" value="" style="endArrow=none;html=1;strokeColor=#D32F2F;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1045" y="206" as="sourcePoint"/>
+            <mxPoint x="1145" y="206" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== RIGHT PIPELINE ==================== -->
+        <!-- Step 1 -->
+        <mxCell id="rp1" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;1&lt;/b&gt; LHS Mode Generation (&lt;i&gt;190 modes, 5 RE penetration levels&lt;/i&gt;)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="880" y="248" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 1→2 -->
+        <mxCell id="ra1" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="286" as="sourcePoint"/>
+            <mxPoint x="1100" y="308" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 2 with NEW badge -->
+        <mxCell id="rp2" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;2&lt;/b&gt; ANDES TDS (~8550 sims)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="880" y="308" width="380" height="38" as="geometry"/>
+        </mxCell>
+        <!-- NEW badge for step 2 -->
+        <mxCell id="new2" value="&lt;font style='font-size:8px;color=#FFFFFF;font-family:Arial'&gt;&lt;b&gt;NEW&lt;/b&gt;&lt;/font&gt;" style="ellipse;whiteSpace=wrap;fillColor=#FF9800;strokeColor=#E65100;strokeWidth=1;fontSize=8;fontFamily=Arial;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="314" width="42" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="new2_txt" value="&lt;font style='font-size:8px;color=#E65100;font-family:Arial'&gt;Multi-point RE&lt;br&gt;injection&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1278" y="342" width="80" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 2→3 -->
+        <mxCell id="ra2" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="346" as="sourcePoint"/>
+            <mxPoint x="1100" y="368" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 3 with NEW badge -->
+        <mxCell id="rp3" value="&lt;font style='font-family:Arial;font-size=11px;color=#1A1A2E'&gt;&lt;b&gt;3&lt;/b&gt; Multi-output GP&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="880" y="368" width="380" height="38" as="geometry"/>
+        </mxCell>
+        <!-- NEW badge for step 3 -->
+        <mxCell id="new3" value="&lt;font style='font-size:8px;color=#FFFFFF;font-family:Arial'&gt;&lt;b&gt;NEW&lt;/b&gt;&lt;/font&gt;" style="ellipse;whiteSpace=wrap;fillColor=#FF9800;strokeColor=#E65100;strokeWidth=1;fontSize=8;fontFamily=Arial;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="374" width="42" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="new3_txt" value="&lt;font style='font-size:8px;color=#E65100;font-family:Arial'&gt;RE distribution&lt;br&gt;parameter&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1278" y="402" width="80" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 3→4 -->
+        <mxCell id="ra3" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="406" as="sourcePoint"/>
+            <mxPoint x="1100" y="428" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 4 -->
+        <mxCell id="rp4" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;4&lt;/b&gt; Bayesian Optimization&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="880" y="428" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 4→5 -->
+        <mxCell id="ra4" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="466" as="sourcePoint"/>
+            <mxPoint x="1100" y="488" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 5 -->
+        <mxCell id="rp5" value="&lt;font style='font-family:Arial;font-size:11px;color=#1A1A2E'&gt;&lt;b&gt;5&lt;/b&gt; AIA Boundary&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="880" y="488" width="440" height="38" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 5→6 -->
+        <mxCell id="ra5" value="" style="endArrow=block;html=1;strokeColor=#546E7A;strokeWidth=1.5;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1100" y="526" as="sourcePoint"/>
+            <mxPoint x="1100" y="548" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Step 6 with NEW badge -->
+        <mxCell id="rp6" value="&lt;font style='font-family:Arial;font-size=11px;color=#1A1A2E'&gt;&lt;b&gt;6&lt;/b&gt; Transfer Limits (MW units)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;fillColor=#FFFFFF;strokeColor=#37474F;strokeWidth=1;fontSize=11;fontFamily=Arial;arcSize=15;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="880" y="548" width="380" height="38" as="geometry"/>
+        </mxCell>
+        <!-- NEW badge for step 6 -->
+        <mxCell id="new6" value="&lt;font style='font-size:8px;color=#FFFFFF;font-family:Arial'&gt;&lt;b&gt;NEW&lt;/b&gt;&lt;/font&gt;" style="ellipse;whiteSpace=wrap;fillColor=#FF9800;strokeColor=#E65100;strokeWidth=1;fontSize=8;fontFamily=Arial;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1270" y="554" width="42" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="new6_txt" value="&lt;font style='font-size:8px;color=#E65100;font-family:Arial'&gt;Interface flow&lt;br&gt;extraction&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1278" y="582" width="80" height="28" as="geometry"/>
+        </mxCell>
+
+        <!-- Right result badge -->
+        <mxCell id="right_result" value="&lt;font style='font-size:11px;color=#2E7D32;font-family:Arial'&gt;&lt;b&gt;扩展结果&lt;/b&gt;: 框架直接适用，MW 级断面限额&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="880" y="600" width="440" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- ==================== CENTER ARROW + CALLOUTS ==================== -->
+        <!-- Main center arrow -->
+        <mxCell id="center_arrow" value="" style="endArrow=block;endFill=1;html=1;strokeColor=#37474F;strokeWidth=3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590" y="400" as="sourcePoint"/>
+            <mxPoint x="810" y="400" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="center_label" value="&lt;font style='font-size:13px;color=#37474F;font-family:Arial'&gt;&lt;b&gt;Framework&lt;br&gt;Extension&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="625" y="365" width="140" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Callout 1: Multi-point RE injection -->
+        <mxCell id="call1_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#FFF3E0;strokeColor=#FF9800;strokeWidth=1.5;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="610" y="440" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="call1_title" value="&lt;font style='font-size:9px;color=#E65100;font-family:Arial'&gt;&lt;b&gt;多点RE注入&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="620" y="444" width="170" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="call1_desc" value="&lt;font style='font-size:8px;color=#795548;font-family:Arial'&gt;6 RE devices across 2 areas&lt;br&gt;RE penetration ratio parameter&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="615" y="462" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Callout 2: Tie-line flow extraction -->
+        <mxCell id="call2_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#FFF3E0;strokeColor=#FF9800;strokeWidth=1.5;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="610" y="510" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="call2_title" value="&lt;font style='font-size:9px;color=#E65100;font-family:Arial'&gt;&lt;b&gt;联络线潮流提取&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="620" y="514" width="170" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="call2_desc" value="&lt;font style='font-size:8px;color=#795548;font-family:Arial'&gt;pi-model tie-line extraction&lt;br&gt;5 interface lines&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="615" y="532" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Callout 3: MW limit computation -->
+        <mxCell id="call3_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#FFF3E0;strokeColor=#FF9800;strokeWidth=1.5;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="610" y="580" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="call3_title" value="&lt;font style='font-size:9px;color=#E65100;font-family:Arial'&gt;&lt;b&gt;MW限额计算&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="620" y="584" width="170" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="call3_desc" value="&lt;font style='font-size:8px;color=#795548;font-family:Arial'&gt;总断面限额&lt;br&gt;physical MW transfer limit&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=top;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="615" y="602" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Connector lines from callouts to center arrow -->
+        <mxCell id="call_line1" value="" style="endArrow=none;html=1;strokeColor=#FF9800;strokeWidth=1;dashed=1;dashPattern=4 2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="440" as="sourcePoint"/>
+            <mxPoint x="700" y="410" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="call_line2" value="" style="endArrow=none;html=1;strokeColor=#FF9800;strokeWidth=1;dashed=1;dashPattern=4 2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="510" as="sourcePoint"/>
+            <mxPoint x="700" y="496" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="call_line3" value="" style="endArrow=none;html=1;strokeColor=#FF9800;strokeWidth=1;dashed=1;dashPattern=4 2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="580" as="sourcePoint"/>
+            <mxPoint x="700" y="566" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== BOTTOM SUMMARY BOX ==================== -->
+        <mxCell id="summary_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#ECEFF1;strokeColor=#455A64;strokeWidth=2;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="100" y="710" width="1200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="summary_left" value="&lt;font style='font-size:10px;color=#455A64;font-family:Arial'&gt;&lt;b&gt;Kundur 2-Area&lt;/b&gt;&lt;br&gt;11 buses / 4 gens / 8D&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="120" y="718" width="180" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="summary_arrow1" value="" style="endArrow=block;endFill=1;html=1;strokeColor=#455A64;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="740" as="sourcePoint"/>
+            <mxPoint x="430" y="740" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="summary_mid" value="&lt;font style='font-size:12px;color=#37474F;font-family:Arial'&gt;&lt;b&gt;4x System Scale&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="440" y="722" width="160" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="summary_arrow2" value="" style="endArrow=block;endFill=1;html=1;strokeColor=#455A64;strokeWidth=2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="610" y="740" as="sourcePoint"/>
+            <mxPoint x="720" y="740" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="summary_right" value="&lt;font style='font-size:10px;color=#455A64;font-family:Arial'&gt;&lt;b&gt;IEEE 39-Bus&lt;/b&gt;&lt;br&gt;39 buses / 10 gens / 7D&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="730" y="718" width="180" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="summary_note" value="&lt;font style='font-size:12px;color=#1A1A2E;font-family:Arial'&gt;&lt;b&gt;方法论跨系统尺度验证&lt;/b&gt;: 框架无需结构性修改即可迁移&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="920" y="722" width="360" height="36" as="geometry"/>
+        </mxCell>
+
+        <!-- ==================== SCALE INDICATORS ==================== -->
+        <!-- Vertical scale indicators inside left box -->
+        <mxCell id="scale_kundur" value="&lt;font style='font-size:9px;color=#546E7A;font-family:Arial'&gt;11 buses&lt;br&gt;4 generators&lt;br&gt;8D param space&lt;br&gt;186 modes&lt;br&gt;6510 TDS&lt;br&gt;2 tie lines&lt;/font&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="340" y="650" width="120" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Vertical scale indicators inside right box -->
+        <mxCell id="scale_ieee" value="&lt;font style='font-size:9px;color=#546E7A;font-family=Arial'&gt;39 buses&lt;br&gt;10 generators&lt;br&gt;7D param space&lt;br&gt;190 modes&lt;br&gt;~8550 TDS&lt;br&gt;5 tie lines&lt;/font&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="650" width="120" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Scale comparison labels -->
+        <mxCell id="scale_left_label" value="&lt;font style='font-size:9px;color=#78909C;font-family:Arial'&gt;&lt;b&gt;系统规模&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="300" y="650" width="60" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="scale_right_label" value="&lt;font style='font-size:9px;color=#78909C;font-family:Arial'&gt;&lt;b&gt;系统规模&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="650" width="60" height="16" as="geometry"/>
+        </mxCell>
+
+        <!-- ==================== HORIZONTAL ALIGNMENT ARROWS (pipeline correspondence) ==================== -->
+        <mxCell id="align_1" value="" style="endArrow=none;html=1;strokeColor=#B0BEC5;strokeWidth=1;dashed=1;dashPattern=3 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="267" as="sourcePoint"/>
+            <mxPoint x="880" y="267" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="align_2" value="" style="endArrow=none;html=1;strokeColor=#B0BEC5;strokeWidth=1;dashed=1;dashPattern=3 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="327" as="sourcePoint"/>
+            <mxPoint x="880" y="327" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="align_3" value="" style="endArrow=none;html=1;strokeColor=#B0BEC5;strokeWidth=1;dashed=1;dashPattern=3 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="387" as="sourcePoint"/>
+            <mxPoint x="880" y="387" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="align_4" value="" style="endArrow=none;html=1;strokeColor=#B0BEC5;strokeWidth=1;dashed=1;dashPattern=3 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="447" as="sourcePoint"/>
+            <mxPoint x="880" y="447" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="align_5" value="" style="endArrow=none;html=1;strokeColor=#B0BEC5;strokeWidth=1;dashed=1;dashPattern=3 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="507" as="sourcePoint"/>
+            <mxPoint x="880" y="507" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="align_6" value="" style="endArrow=none;html=1;strokeColor=#B0BEC5;strokeWidth=1;dashed=1;dashPattern=3 3;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="567" as="sourcePoint"/>
+            <mxPoint x="880" y="567" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

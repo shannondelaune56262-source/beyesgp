@@ -1,0 +1,41 @@
+# Experiment 5: IEEE 39-bus scalability validation (20D parameter space)
+# Purpose: Validate GP+BO+AIA framework on a larger system per CSEE reviewer requirement
+experiment_name: "exp5_ieee39_20d"
+
+optimizer:
+  n_init: 50  # More initial points for 20D space
+  n_iter: 200  # More iterations for higher dimensionality
+  acquisition: "EI"
+  kernel: "matern52"
+  # Use sparse GP for scalability (SVGP)
+  use_sparse_gp: true
+  n_inducing: 100  # Number of inducing points for SVGP
+
+simulation:
+  tf: 15.0  # Longer simulation for larger system
+  timeout: 120  # 2 min timeout per simulation
+  # RE device configuration (REGCA1+REECA1+REPCA1)
+  re_devices:
+    - bus: 30
+      model_chain: "REGCA1+REECA1+REPCA1"
+      capacity_mw: 200
+      penetration_range: [0.0, 0.45]
+    - bus: 31
+      model_chain: "REGCA1+REECA1+REPCA1"
+      capacity_mw: 200
+      penetration_range: [0.0, 0.45]
+    - bus: 33
+      model_chain: "REGCA1+REECA1+REPCA1"
+      capacity_mw: 200
+      penetration_range: [0.0, 0.45]
+    - bus: 34
+      model_chain: "REGCA1+REECA1+REPCA1"
+      capacity_mw: 200
+      penetration_range: [0.0, 0.45]
+
+experiment:
+  n_seeds: 3
+  seeds: [42, 123, 456]
+  n_workers: 4  # More parallelism for longer simulations
+  scenario_space: "20d"
+  test_system: "ieee39"

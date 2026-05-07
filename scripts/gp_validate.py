@@ -1,8 +1,9 @@
 """GP surrogate model validation with joint mode+fault features.
 
-Supports two modes:
-  --mode-only: GP on mode parameters only (7D, expected low R²)
-  --joint: GP on mode+fault parameters (9D, expected high R²)
+Supports three modes:
+  --mode re-aware: GP on mode+re_level (8D, paper's main result, R²≈0.58)
+  --mode mode-only: GP on mode parameters only (7D, expected low R²)
+  --mode joint: GP on mode+fault parameters (9D, expected high R²)
 """
 
 import logging
@@ -29,6 +30,8 @@ MODE_FEATURES = [
     "gen_dispatch_bias",
 ]
 
+RE_AWARE_FEATURES = MODE_FEATURES + ["re_level"]
+
 JOINT_FEATURES = MODE_FEATURES + ["fault_bus", "clear_time"]
 
 
@@ -44,12 +47,17 @@ def validate_gp(
     # Auto-detect data source
     if results_csv is None:
         joint_csv = Path("data/processed/joint_sweep/joint_sweep_results.csv")
+        re_csv = Path("data/processed/re_sweep/re_sweep_results.csv")
         mode_csv = Path("data/processed/mode_sweep/mode_sweep_results.csv")
 
         if mode == "joint" and joint_csv.exists():
             results_csv = str(joint_csv)
+        elif mode == "re-aware" and re_csv.exists():
+            results_csv = str(re_csv)
         elif mode == "mode-only" and mode_csv.exists():
             results_csv = str(mode_csv)
+        elif re_csv.exists():
+            results_csv = str(re_csv)
         elif joint_csv.exists():
             results_csv = str(joint_csv)
         elif mode_csv.exists():
@@ -73,6 +81,8 @@ def validate_gp(
     # Select features
     if mode == "mode-only":
         feature_cols = MODE_FEATURES
+    elif mode == "re-aware":
+        feature_cols = RE_AWARE_FEATURES
     else:
         feature_cols = JOINT_FEATURES
 
@@ -105,10 +115,49 @@ def validate_gp(
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     mae = np.mean(np.abs(y_test - y_pred))
 
+    # --- Local R² in boundary bands ---
+    def local_metrics(y_true, y_pred, lo, hi, label):
+        mask = (y_true >= lo) & (y_true <= hi)
+        n = mask.sum()
+        if n < 5:
+            return {"n": int(n), "r2": None, "rmse": None, "mae": None}
+        r2_l = r2_score(y_true[mask], y_pred[mask])
+        rmse_l = np.sqrt(mean_squared_error(y_true[mask], y_pred[mask]))
+        mae_l = np.mean(np.abs(y_true[mask] - y_pred[mask]))
+        logger.info(f"  [{label}] n={n}, R²={r2_l:.4f}, RMSE={rmse_l:.4f}, MAE={mae_l:.4f}")
+        return {"n": int(n), "r2": float(r2_l), "rmse": float(rmse_l), "mae": float(mae_l)}
+
     logger.info(f"\n=== GP Validation Results ({mode}) ===")
-    logger.info(f"  R²:  {r2:.4f}")
+    logger.info(f"  Global R²:  {r2:.4f}")
     logger.info(f"  RMSE: {rmse:.4f}")
     logger.info(f"  MAE:  {mae:.4f}")
+    logger.info(f"  Boundary-band R² (S ∈ [0.4, 0.8]):")
+    boundary = local_metrics(y_test, y_pred, 0.4, 0.8, "boundary 0.4-0.8")
+    logger.info(f"  Critical-band R² (S ∈ [0.5, 0.7]):")
+    critical = local_metrics(y_test, y_pred, 0.5, 0.7, "critical 0.5-0.7")
+
+    # --- Safety classification accuracy at θ=0.6 ---
+    theta = 0.6
+    y_true_safe = y_test < theta
+    y_pred_safe = y_pred < theta
+    n_boundary_zone = ((y_test >= 0.4) & (y_test <= 0.8)).sum()
+    if n_boundary_zone > 0:
+        bz_mask = (y_test >= 0.4) & (y_test <= 0.8)
+        from sklearn.metrics import accuracy_score, confusion_matrix
+        acc_boundary = accuracy_score(y_true_safe[bz_mask], y_pred_safe[bz_mask])
+        cm = confusion_matrix(y_true_safe[bz_mask], y_pred_safe[bz_mask], labels=[True, False])
+        tn, fp, fn, tp = cm.ravel() if cm.size == 4 else (0, 0, 0, 0)
+        logger.info(f"  Boundary-zone classification accuracy (θ={theta}): {acc_boundary:.4f}")
+        logger.info(f"    TN={tn}, FP={fp}, FN={fn}, TP={tp}")
+        classification = {
+            "threshold": theta,
+            "boundary_zone_n": int(n_boundary_zone),
+            "accuracy": float(acc_boundary),
+            "true_negative": int(tn), "false_positive": int(fp),
+            "false_negative": int(fn), "true_positive": int(tp),
+        }
+    else:
+        classification = {}
 
     # Also train per-constraint GPs if data available (using same train/test split)
     constraint_results = {}
@@ -131,6 +180,9 @@ def validate_gp(
         "r2": float(r2),
         "rmse": float(rmse),
         "mae": float(mae),
+        "boundary_band": boundary,
+        "critical_band": critical,
+        "classification": classification,
         "n_train": len(X_train),
         "n_test": len(X_test),
         "n_features": X.shape[1],
@@ -141,7 +193,7 @@ def validate_gp(
         "uncertainty": y_std.tolist() if isinstance(y_std, np.ndarray) else [],
     }
 
-    suffix = "joint" if mode != "mode-only" else "mode_only"
+    suffix = {"mode-only": "mode_only", "re-aware": "re_aware"}.get(mode, "joint")
     with open(output_path / f"gp_validation_{suffix}.json", "w") as f:
         json.dump(gp_data, f, indent=2)
 
@@ -152,6 +204,6 @@ def validate_gp(
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=["joint", "mode-only"], default="joint")
+    parser.add_argument("--mode", choices=["joint", "mode-only", "re-aware"], default="re-aware")
     args = parser.parse_args()
     validate_gp(mode=args.mode)

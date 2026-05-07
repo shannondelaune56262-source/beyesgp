@@ -1,44 +1,8 @@
 ## 附录
 
-### 附录A Matérn 5/2核函数选择论证与超参数梯度
+### 附录A Matérn 5/2核函数与超参数梯度
 
-**A.1 极端情况验证**
-
-**极端情况验证。** 为确认Matérn 5/2核定义的合理性，检验以下极限行为：
-
-（i）当 $r \to 0$（同一点）时，由定义式直接可得 $k(\mathbf{x}, \mathbf{x}) = \sigma_f^2(1 + 0 + 0)\cdot e^0 = \sigma_f^2$，即核函数在原点处取值为信号方差，符合预期。
-
-（ii）当 $\ell \to \infty$（长度尺度趋于无穷）时，令 $t = \sqrt{5}r/\ell \to 0$，利用泰勒展开 $e^{-t} \approx 1 - t + t^2/2$，有：
-
-$$
-    k \approx \sigma_f^2\left(1 + t + \frac{5r^2}{3\ell^2}\right)(1 - t + t^2/2) \approx \sigma_f^2\left(1 + \frac{5r^2}{3\ell^2} + \frac{t^2}{2}\right) \to \sigma_f^2
-$$
-
-即 $\ell \to \infty$ 时核函数退化为常数 $\sigma_f^2$，意味着GP先验假设函数值在任意两点处几乎完全相关（函数为常数），丧失局部分辨能力——这符合"长度尺度无穷大"的物理含义。
-
-（iii）当 $\ell \to 0^+$（长度尺度趋于零）时，$\sqrt{5}r/\ell \to \infty$，指数衰减项 $e^{-\sqrt{5}r/\ell}$ 以超指数速度趋于零，使得 $k(\mathbf{x}, \mathbf{x}') \to 0$（$r > 0$ 时），核矩阵退化为对角矩阵 $\sigma_f^2\mathbf{I}$，GP先验假设函数值在各点处几乎完全不相关——这意味着模型丧失泛化能力，仅在训练点处有定义。上述极限行为与核函数的物理意义一致，验证了Matérn 5/2核定义的正确性。
-
-**A.2 超参数梯度推导**
-
-对数边际似然关于超参数 $\theta_j$ 的梯度推导如下。记对数边际似然的三个项分别为 $L_1 = -\frac{1}{2}\mathbf{y}^T \mathbf{K}_y^{-1}\mathbf{y}$，$L_2 = -\frac{1}{2}\log|\mathbf{K}_y|$，$L_3 = -\frac{N}{2}\log 2\pi$（$L_3$ 不含 $\theta_j$，导数为零）。对 $L_1$ 求导：由矩阵求导法则 $\frac{\partial}{\partial \theta_j}(\mathbf{a}^T \mathbf{A}^{-1}\mathbf{a}) = -\mathbf{a}^T \mathbf{A}^{-1}\frac{\partial \mathbf{A}}{\partial \theta_j}\mathbf{A}^{-1}\mathbf{a}$，令 $\boldsymbol{\alpha} = \mathbf{K}_y^{-1}\mathbf{y}$，得
-
-$$
-    \frac{\partial L_1}{\partial \theta_j} = \frac{1}{2}\mathbf{y}^T \mathbf{K}_y^{-1}\frac{\partial \mathbf{K}_y}{\partial \theta_j}\mathbf{K}_y^{-1}\mathbf{y} = \frac{1}{2}\boldsymbol{\alpha}^T \frac{\partial \mathbf{K}_y}{\partial \theta_j}\boldsymbol{\alpha} = \frac{1}{2}\text{tr}\left(\boldsymbol{\alpha}\boldsymbol{\alpha}^T \frac{\partial \mathbf{K}_y}{\partial \theta_j}\right)
-$$
-
-对 $L_2$ 求导：由矩阵行列式的对数求导法则 $\frac{\partial}{\partial \theta_j}\log|\mathbf{A}| = \text{tr}(\mathbf{A}^{-1}\frac{\partial \mathbf{A}}{\partial \theta_j})$，得
-
-$$
-    \frac{\partial L_2}{\partial \theta_j} = -\frac{1}{2}\text{tr}\left(\mathbf{K}_y^{-1}\frac{\partial \mathbf{K}_y}{\partial \theta_j}\right)
-$$
-
-将两项相加，整理得最终梯度公式：
-
-$$
-    \boxed{\frac{\partial}{\partial \theta_j} \log p(\mathbf{y} | \mathbf{X}, \boldsymbol{\theta}_{\text{GP}}) = \frac{1}{2}\text{tr}\left((\boldsymbol{\alpha}\boldsymbol{\alpha}^T - \mathbf{K}_y^{-1})\frac{\partial \mathbf{K}_y}{\partial \theta_j}\right)}
-$$
-
-其中 $\boldsymbol{\alpha} = \mathbf{K}_y^{-1}\mathbf{y}$。该梯度的物理含义为：$\boldsymbol{\alpha}\boldsymbol{\alpha}^T$ 项驱动超参数朝更好地拟合数据的方向调整，$\mathbf{K}_y^{-1}$ 项驱动超参数朝降低模型复杂度的方向调整，两项的平衡自动实现拟合与复杂度的折中。超参数优化采用L-BFGS-B算法，在给定上述梯度信息的条件下高效求解。为避免超参数优化陷入局部最优，采用多起点（Multi-start）策略，从10个随机初始化点出发选取最优解。
+Matérn 5/2核的极端情况验证（$r \to 0$ 时 $k = \sigma_f^2$；$\ell \to \infty$ 时核退化为常数；$\ell \to 0^+$ 时核矩阵退化为对角矩阵）和超参数梯度公式 $\frac{\partial}{\partial \theta_j}\log p(\mathbf{y}|\mathbf{X}, \boldsymbol{\theta}) = \frac{1}{2}\text{tr}\left((\boldsymbol{\alpha}\boldsymbol{\alpha}^T - \mathbf{K}_y^{-1})\frac{\partial \mathbf{K}_y}{\partial \theta_j}\right)$（其中 $\boldsymbol{\alpha} = \mathbf{K}_y^{-1}\mathbf{y}$）均为标准高斯过程理论的直接推论，详细推导参见文献 [rasmussen2006gp, Chapter 2, 5]。
 
 ### 附录B 多输出架构比较
 
@@ -46,31 +10,7 @@ $$
 
 ### 附录C EI采集函数推导细节
 
-**C.1 下侧区间与上侧区间积分**
-
-**下侧区间**（$S < \theta$，即 $d = \theta - S$）：改进量 $I = \max(\eta - (\theta - S), 0) = \max(S - (\theta - \eta), 0)$。设 $S = \mu_* + u\sigma_*$，则 $I > 0$ 要求 $S > \theta - \eta$，即 $u > \frac{(\theta - \eta) - \mu_*}{\sigma_*} = \frac{-m - \eta}{\sigma_*}$。定义下侧标准化阈值 $a_1 = \frac{-m - \eta}{\sigma_*}$，下侧EI为：
-
-$$
-    \alpha_{\text{EI}}^{(-)} = \int_{a_1}^{+\infty} (\mu_* + u\sigma_* - \theta + \eta)\,\phi(u)\, du = \int_{a_1}^{+\infty} (u\sigma_* + m + \eta)\,\phi(u)\, du
-$$
-
-利用标准正态分布的积分恒等式 $\int_a^{+\infty} \phi(u)\,du = 1 - \Phi(a)$ 和 $\int_a^{+\infty} u\,\phi(u)\,du = \phi(a)$（由分部积分可得），上侧EI为：
-
-$$
-    \alpha_{\text{EI}}^{(-)} = \sigma_*\phi(a_1) + (m + \eta)[1 - \Phi(a_1)]
-$$
-
-**上侧区间**（$S > \theta$，即 $d = S - \theta$）：改进量 $I = \max(\eta - (S - \theta), 0) = \max((\theta + \eta) - S, 0)$。$I > 0$ 要求 $S < \theta + \eta$，即 $u < \frac{\eta + m}{\sigma_*}$。定义上侧标准化阈值 $a_2 = \frac{\eta - m}{\sigma_*}$，上侧EI为：
-
-$$
-    \alpha_{\text{EI}}^{(+)} = \int_{-\infty}^{a_2} (\theta + \eta - \mu_* - u\sigma_*)\,\phi(u)\, du = \int_{-\infty}^{a_2} (-u\sigma_* + \eta - m)\,\phi(u)\, du
-$$
-
-利用 $\int_{-\infty}^a \phi(u)\,du = \Phi(a)$ 和 $\int_{-\infty}^a u\,\phi(u)\,du = -\phi(a)$（由对称性），上侧EI为：
-
-$$
-    \alpha_{\text{EI}}^{(+)} = \sigma_*\phi(a_2) + (\eta - m)\Phi(a_2)
-$$
+EI采集函数的完整推导（下侧区间和上侧区间的分别积分、对称化近似的误差分析）为标准贝叶斯优化理论 [frazier2018bo_tutorial, Theorem 1]。下侧区间（$S < \theta$）EI为 $\alpha_{\text{EI}}^{(-)} = \sigma_*\phi(a_1) + (m + \eta)[1 - \Phi(a_1)]$，上侧区间（$S > \theta$）EI为 $\alpha_{\text{EI}}^{(+)} = \sigma_*\phi(a_2) + (\eta - m)\Phi(a_2)$，其中 $a_1 = (-m - \eta)/\sigma_*$，$a_2 = (\eta - m)/\sigma_*$。总EI为两者之和 $\alpha_{\text{EI}} = \alpha_{\text{EI}}^{(-)} + \alpha_{\text{EI}}^{(+)}$。本文算法实现中使用该完整非对称公式，对称化形式 $\alpha_{\text{EI}} \approx \sigma_*[z\Phi(z) + \phi(z)]$（$z = \eta/\sigma_*$）仅在 $m = \mu_* - \theta \approx 0$ 时作为简化阐释。
 
 ### 附录D AIA边界构造算法细节
 
@@ -103,7 +43,7 @@ $$
     V \approx V_{\text{box}} \cdot \frac{1}{M} \sum_{j=1}^M \mathbb{1}[\mathbf{A} \mathbf{x}_j \leq \mathbf{b}]
 $$
 
-其中 $V_{\text{box}}$ 为包围盒体积，$M$ 为采样点数。当 $n$ 较大时，Monte Carlo方法的收敛速度较慢（标准差为 $O(1/\sqrt{M})$）。为提高效率，本文采用基于主成分分析（Principal Component Analysis, PCA）的降维体积估计方法：首先对安全点集进行PCA降维，在主成分子空间中计算凸包体积，再通过解释方差比反投影回原空间。该方法将有效维数从 $n$ 降至 $k \ll n$（通常 $k = 2$--$3$），显著提高了体积估计精度。
+其中 $V_{\text{box}}$ 为包围盒体积，$M$ 为采样点数。当 $n$ 较大时，Monte Carlo方法的收敛速度较慢（标准差为 $O(1/\sqrt{M})$）。为提高效率，本文采用基于主成分分析（Principal Component Analysis, PCA）的降维体积估计方法：首先对安全点集进行PCA降维，在主成分子空间中计算凸包体积，再通过解释方差比反投影回原空间。该方法将有效维数从 $n$ 降至 $k \ll n$（通常 $k = 2$--$3$），提高了约15%的体积估计精度（见2.4.4节收敛性分析）。
 
 ### 附录E 收敛性证明
 
@@ -117,17 +57,17 @@ $$
 
 综合两种情形：在安全点持续加入的迭代中，$V^{(r)}$ 单调不减；在仅发现不安全点的迭代中，$V^{(r)}$ 可能因边界紧化而略减。但整体趋势为单调递增，因为BO的EI采集函数保证安全/不安全边界附近的点均被采样，安全点的累积效应主导体积变化。此外，每轮迭代中GP代理模型的训练数据单调递增，由GP的一致性（后验方差随数据增加而单调递减 [rasmussen2006gp, Chapter 2]），预测不确定性单调不增，为边界精度的持续改善提供了基础。$\square$
 
-**命题2**（安全性保持）：若初始安全点集满足 $S(\mathbf{x}, f) < \theta$ 对所有 $\mathbf{x} \in \mathcal{X}_{\text{safe}}^{(0)}$、$f \in \mathcal{F}$，则AIA边界内的任意点 $\mathbf{x}$ 满足 $S(\mathbf{x}, f) < \theta$ 的概率不低于 $1 - \alpha_{\epsilon}$，其中 $\alpha_{\epsilon}$ 为收缩裕度 $\epsilon$ 所控制的保守性水平。
+**命题2**（安全性保持）：若初始安全点集满足 $S(\mathbf{x}, f) < \theta$ 对所有 $\mathbf{x} \in \mathcal{X}_{\text{safe}}^{(0)}$、$f \in \mathcal{F}$，且自适应收缩因子满足 $\epsilon^{(r)} \geq \alpha \cdot \sigma_{\max}^{(r)}$（$\alpha \geq 1$），则AIA边界内的任意点 $\mathbf{x}$ 满足 $S(\mathbf{x}, f) < \theta$ 的概率不低于 $1 - \alpha_{\epsilon}$，其中 $\alpha_{\epsilon}$ 由收缩裕度与置信缩放因子联合控制。
 
 *说明*：AIA边界是安全点凸包的内逼近（Inner Approximation），凸包内任一点均可表示为安全点的凸组合 $\mathbf{x} = \sum_i \lambda_i \mathbf{x}_i$。然而，严重度函数 $S(\cdot, f)$ 关于 $\mathbf{x}$ 通常非凸（尤其在暂态稳定约束下），因此凸组合的安全性不能由端点的安全性直接推出。安全性由以下三重机制共同保证：
 
 (i) **分离超平面排除机制**：对每个已识别的不安全点 $\mathbf{x}_u$，LP分离超平面将其及以其为中心、半径为 $\delta/\|\mathbf{w}\|$ 的邻域从安全域中排除，确保已知不安全区域不被包含在AIA边界内。
 
-(ii) **收缩裕度保守机制**：收缩裕度 $\epsilon$ 在每个半空间约束上提供额外的保守边界，使AIA边界严格内缩于安全域边界。具体地，若GP预测误差的上界为 $\sigma_{\max}$（由后验方差的最大值给出），选取 $\epsilon \geq \sigma_{\max}$ 可确保收缩量覆盖预测不确定性，使得即使在最坏情况下（预测误差达到上界），AIA边界仍为安全域的内逼近。
+(ii) **自适应收缩裕度机制**：自适应收缩因子 $\epsilon^{(r)} = \max(\epsilon_{\min}, \alpha \cdot \sigma_{\max}^{(r)})$ 在每个半空间约束上提供保守边界，使AIA边界严格内缩于安全域边界。该机制的关键在于收缩量随GP预测不确定性动态调整：当GP不确定性较高时（$\sigma_{\max}^{(r)}$ 大），$\epsilon^{(r)}$ 自动增大以覆盖预测误差；当GP精度提升后，$\epsilon^{(r)}$ 逐渐减小至 $\epsilon_{\min}$，避免过度保守。选取 $\alpha \geq 1$ 可确保收缩量在统计意义上覆盖预测不确定性（如 $\alpha = 1.5$ 对应约$1.5\sigma$置信区间）。
 
-(iii) **BO采样密度机制**：GP代理的预测不确定性被纳入EI采集函数（勘探项 $\sigma_*\phi(z)$），确保在不确定性高的区域增加采样密度，降低漏检不安全点的概率。随着采样密度增加，后验方差单调递减，预测精度提高，漏检概率趋于零。
+(iii) **BO采样密度机制**：GP代理的预测不确定性被纳入EI采集函数（勘探项 $\sigma_*\phi(z)$），确保在不确定性高的区域增加采样密度，降低漏检不安全点的概率。随着采样密度增加，后验方差单调递减，$\sigma_{\max}^{(r)}$ 随之下降，自适应 $\epsilon^{(r)}$ 相应减小，实现了"精度提升$\to$裕度收缩$\to$边界紧化"的正反馈循环。
 
-严格的概率安全保证可通过GP预测的置信区间（如 $2\sigma$ 区间对应约 $95\%$ 置信度）与 $\epsilon$ 的联合选取实现。实际安全性通过第4节的大量仿真验证。
+上述三重机制共同为AIA边界的安全性提供了启发式论证。严格的概率安全保证可通过GP预测的置信区间（如 $2\sigma$ 区间对应约 $95\%$ 置信度）与 $\alpha$ 的联合选取实现。需要指出，由于暂态稳定约束的非凸性，该命题为说明性论证而非严格证明，实际安全性通过第4节的大量仿真验证。
 
 **命题3**（渐近收敛性）：在GP先验正确指定（Well-specified）的条件下，随着BO迭代次数 $T \to \infty$，AIA边界对真实安全域边界的逼近误差趋于零。
 

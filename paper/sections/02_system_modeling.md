@@ -6,9 +6,11 @@
 
 同步发电机采用6阶机电暂态模型（GENROU），包含 $d$ 轴和 $q$ 轴各三个绕组，可精确描述暂态和次暂态过程。配备IEEE Type I励磁系统和TGOV1调速器，实现电压调节和频率-有功控制。系统基准容量 $S_B = 100$ MVA，仿真时长 $T = 10$ s，步长 $\Delta t = 0.02$ s。
 
-Area 1包含GENROU\_1（Bus 1，900 MVA，惯性常数 $H_1 = 6.5$ s）和GENROU\_2（Bus 2，900 MVA，$H_2 = 6.5$ s），主要负责向Area 1本地负荷供电；Area 2包含GENROU\_3（Bus 3，900 MVA，$H_3 = 6.175$ s）和GENROU\_4（Bus 4，900 MVA，$H_4 = 6.175$ s），除向Area 2本地负荷供电外还通过联络线向Area 1输送有功功率。正常运行时联络线功率约400 MW，形成典型的"大受端、小送端"功率传输格局，使联络线附近的故障对系统暂态稳定性影响最为显著。
+Area 1包含GENROU\_1（Bus 1，900 MVA，惯性常数 $H_1 = 6.5$ s）和GENROU\_2（Bus 2，900 MVA，$H_2 = 6.5$ s），主要负责向Area 1本地负荷供电；Area 2包含GENROU\_3（Bus 3，900 MVA，$H_3 = 6.175$ s）和GENROU\_4（Bus 4，900 MVA，$H_4 = 6.175$ s），除向Area 2本地负荷供电外还通过联络线向Area 1输送有功功率。正常运行时联络线功率约400 MW，形成典型的"大受端、小送端"功率传输格局，使联络线附近的故障对系统暂态稳定性影响最为显著（Bus 7--Bus 8联络线故障下功角严重度升高38%--52%）。
 
 系统参数详见表1。
+
+![图1](figures/fig1_topology.drawio.png)
 
 **新能源动态模型。** 为模拟高比例新能源接入场景，在ANDES仿真平台 [li2023andes] 中注入WECC标准新能源动态模型链 [pearson2021regca1]。该模型链由三个层次化的子模型组成，分别描述新能源设备的电流注入特性、电气控制逻辑和厂站级功率管理：
 
@@ -26,7 +28,7 @@ Area 1包含GENROU\_1（Bus 1，900 MVA，惯性常数 $H_1 = 6.5$ s）和GENROU
 
 $$
     \alpha_k^{(r)} = \alpha_{k,0} - \Delta\alpha \cdot r, \quad k \in \{\text{Area1, Area2}\}
-$$
+$$    (1)
 
 其中 $\alpha_{k,0}$ 为无新能源时的基准出力系数，$\Delta\alpha$ 为每级渗透率对应的出力减少量。以Area 1为例， $r=0$ 时 $\alpha_1 = 1.00$（全额出力）， $r=4$ 时 $\alpha_1 = 0.55$（替代45%出力）。
 
@@ -42,15 +44,15 @@ $$
 
 $$
     S(\mathbf{x}, f) = \omega_a \cdot f_{\text{angle}}(\mathbf{x}, f) + \omega_f \cdot f_{\text{freq}}(\mathbf{x}, f) + \omega_v \cdot f_{\text{voltage}}(\mathbf{x}, f)
-$$
+$$    (2)
 
-其中 $f_{\text{angle}}$、 $f_{\text{freq}}$、 $f_{\text{voltage}}$ 分别为功角、频率、电压严重度子指标， $\omega_a, \omega_f, \omega_v$ 为基于熵权法确定的权重系数。各子指标计算如下：
+其中 $f_{\text{angle}}$、 $f_{\text{freq}}$、 $f_{\text{voltage}}$ 分别为功角、频率、电压严重度子指标， $\omega_a, \omega_f, \omega_v$ 为基于熵权法确定的权重系数（3.1节）。采用加权求和而非取最大值的原因是：高渗透率下多约束同时激活（4.2.3节），取最大值会丢失非主导约束的信息，使代理模型无法学习到约束间的耦合关系，而加权求和保留了所有约束的严重度信息。各子指标计算如下：
 
 功角严重度：
 
 $$
     f_{\text{angle}} = \min\left(1, \frac{\Delta\delta_{\max}}{180°}\right)
-$$
+$$    (3)
 
 其中 $\Delta\delta_{\max}$ 为仿真时段内任意两台发电机间的最大功角差。该指标以180°为临界失稳阈值进行归一化：当 $\Delta\delta_{\max} < 90°$ 时系统处于安全状态（$f_{\text{angle}} < 0.5$），当 $\Delta\delta_{\max}$ 接近180°时系统趋于失稳（$f_{\text{angle}} \to 1$）。选择180°作为阈值基于第一摆失稳判据：功角差超过180°后系统通常无法恢复同步。
 
@@ -58,7 +60,7 @@ $$
 
 $$
     f_{\text{freq}} = \min\left(1, \frac{|\Delta f|_{\max}}{1.0 \text{ Hz}}\right)
-$$
+$$    (4)
 
 其中 $|\Delta f|_{\max}$ 为仿真时段内系统频率偏离额定值（50 Hz）的最大绝对偏差。以1.0 Hz为归一化基准，对应《电力系统安全稳定导则》（GB/T 26399-2011）规定的频率安全限值（49.0--51.0 Hz）。
 
@@ -66,7 +68,7 @@ $$
 
 $$
     f_{\text{voltage}} = 1 - \min(1, V_{\min})
-$$
+$$    (5)
 
 其中 $V_{\min}$ 为仿真时段内所有负荷母线电压的最低标幺值。该指标对电压跌落进行惩罚：当 $V_{\min} > 0.8$ p.u.时电压跌落较小（$f_{\text{voltage}} < 0.2$），当 $V_{\min} < 0.75$ p.u.时电压严重跌落（$f_{\text{voltage}} > 0.25$）。
 
@@ -82,6 +84,6 @@ $$
 
 $$
     \Omega_{\text{safe}}(f) = \{\mathbf{x} \in \mathcal{X} \subset \mathbb{R}^n \mid S(\mathbf{x}, f) < \theta\}
-$$
+$$    (6)
 
 其中 $\mathbf{x}$ 为 $n$ 维运行方式向量，$f$ 为特定故障场景，$S(\cdot)$ 为综合严重度函数，$\theta$ 为安全阈值。直接通过仿真枚举 $\Omega_{\text{safe}}$ 的计算复杂度为 $O(|\mathcal{X}| \cdot |\mathcal{F}|)$，在高维空间中不可行。本文目标为：构造安全域 $\Omega_{\text{safe}}$ 的仿射内逼近 $\mathcal{P}=\{\mathbf{x}|\mathbf{A}\mathbf{x}\leq\mathbf{b}\}$，使其满足：（i）安全性——$\mathcal{P}$ 内所有点经仿真验证为安全；（ii）紧致性——$\mathcal{P}$ 的体积尽可能接近 $\Omega_{\text{safe}}$ 的真实体积；（iii）可解释性——$\mathcal{P}$ 的仿射约束可直接映射为传输断面限额，支撑调度决策。

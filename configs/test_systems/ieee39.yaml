@@ -1,0 +1,288 @@
+# IEEE 39-bus (New England) test system configuration
+# 10-machine, 39-bus system (ANDES built-in case: ieee39/ieee39_full.xlsx)
+# Topology verified from ANDES case data (2026-05)
+#
+# 2-area structure: WEST (load-heavy, net importer ~505 MW) / EAST (gen-heavy, net exporter ~543 MW)
+# 5 inter-area tie lines forming the transfer interface for limit calculation
+# 6 RE injection points creating spatial distribution-dependent transfer limits
+
+system:
+  name: "IEEE 39-Bus New England"
+  case_path: "ieee39/ieee39_full.xlsx"  # ANDES built-in case with dynamics
+  n_gen: 10
+  n_bus: 39
+  n_line: 46  # 34 lines + 12 transformers
+  n_load: 19
+  freq_nominal: 60.0  # Hz
+  base_mva: 100.0
+  total_gen_mw: 5894.6
+  total_load_mw: 5856.4
+
+# Buses eligible for three-phase fault (network buses 1-29, exclude generator buses 30-39)
+fault_buses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+              17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+
+# === Area definitions (verified from ANDES ieee39_full.xlsx) ===
+# WEST (Area 1): load-heavy, gen 2703 MW, load 3208 MW, net import ~505 MW
+# EAST (Area 2): gen-heavy, gen 3192 MW, load 2649 MW, net export ~543 MW
+areas:
+  west:
+    buses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 17, 18, 25, 26, 27]
+    gen_buses: [30, 31, 32, 37, 39]
+    generators: ["GENROU_1", "GENROU_2", "GENROU_3", "GENROU_8", "GENROU_10"]
+    loads: [3, 4, 7, 8, 12, 18, 25, 26, 27]
+    load_mw: 3208.0
+    gen_mw: 2703.0
+  east:
+    buses: [14, 15, 16, 19, 20, 21, 22, 23, 24, 28, 29]
+    gen_buses: [33, 34, 35, 36, 38]
+    generators: ["GENROU_4", "GENROU_5", "GENROU_6", "GENROU_7", "GENROU_9"]
+    loads: [15, 16, 20, 21, 23, 24, 28, 29]
+    load_mw: 2649.0
+    gen_mw: 3192.0
+
+# === Inter-area tie lines (verified: cross-area branches) ===
+# Total interface flow (WEST→EAST positive) = sum of all 5 lines
+# This is the transfer limit interface
+tie_lines:
+  - name: "Line_8"
+    from_bus: 4    # WEST
+    to_bus: 14     # EAST
+    interface: "north"
+  - name: "Line_18"
+    from_bus: 13   # WEST
+    to_bus: 14     # EAST
+    interface: "north"
+  - name: "Line_21"
+    from_bus: 17   # WEST
+    to_bus: 16     # EAST
+    interface: "middle"
+  - name: "Line_32"
+    from_bus: 26   # WEST
+    to_bus: 28     # EAST
+    interface: "south"
+  - name: "Line_33"
+    from_bus: 26   # WEST
+    to_bus: 29     # EAST
+    interface: "south"
+
+# === Generator details (from ANDES case) ===
+generators:
+  - name: "GENROU_1"
+    bus: 30
+    area: "west"
+    p_mw: 436.1
+    sn_mva: 1040.0
+    h_s: 8.40
+    type: "PV"
+  - name: "GENROU_2"
+    bus: 31
+    area: "west"
+    p_mw: 646.0
+    sn_mva: 836.0
+    h_s: 6.06
+    type: "PV"
+  - name: "GENROU_3"
+    bus: 32
+    area: "west"
+    p_mw: 725.0
+    sn_mva: 843.7
+    h_s: 7.16
+    type: "PV"
+  - name: "GENROU_4"
+    bus: 33
+    area: "east"
+    p_mw: 652.0
+    sn_mva: 1174.8
+    h_s: 5.72
+    type: "PV"
+  - name: "GENROU_5"
+    bus: 34
+    area: "east"
+    p_mw: 508.0
+    sn_mva: 1080.2
+    h_s: 5.20
+    type: "PV"
+  - name: "GENROU_6"
+    bus: 35
+    area: "east"
+    p_mw: 687.0
+    sn_mva: 1085.7
+    h_s: 6.96
+    type: "PV"
+  - name: "GENROU_7"
+    bus: 36
+    area: "east"
+    p_mw: 580.0
+    sn_mva: 1025.2
+    h_s: 5.28
+    type: "PV"
+  - name: "GENROU_8"
+    bus: 37
+    area: "west"
+    p_mw: 321.5
+    sn_mva: 970.2
+    h_s: 4.86
+    type: "PV"
+  - name: "GENROU_9"
+    bus: 38
+    area: "east"
+    p_mw: 764.8
+    sn_mva: 1684.1
+    h_s: 6.90
+    type: "PV"
+  - name: "GENROU_10"
+    bus: 39
+    area: "west"
+    p_mw: 574.2
+    sn_mva: 1199.0
+    h_s: 100.00  # External equivalent (slack)
+    type: "Slack"
+
+# === RE device placement: 6 injection points for spatial distribution effects ===
+# re_west_fraction controls how much RE goes to WEST vs EAST
+# WEST RE: reduces import demand → may increase transfer limit
+# EAST RE: replaces synchronous gen → reduces inertia → may decrease transfer limit
+re_placement:
+  west:
+    - id: "RE_W1"
+      bus: 4          # WEST largest load center (450 MW), near northern tie line
+      max_mw: 250
+      weight: 0.42    # Share within WEST (proportional to max_mw)
+    - id: "RE_W2"
+      bus: 8          # WEST major load (522 MW), near tie-line corridor
+      max_mw: 200
+      weight: 0.33
+    - id: "RE_W3"
+      bus: 6          # Network hub bus, connected to GENROU_2 via transformer
+      max_mw: 150
+      weight: 0.25
+  east:
+    - id: "RE_E1"
+      bus: 20         # EAST largest load (680 MW, via 138kV transformer)
+      max_mw: 300
+      weight: 0.46
+    - id: "RE_E2"
+      bus: 16         # EAST network hub (5 outgoing lines), flow-critical
+      max_mw: 200
+      weight: 0.31
+    - id: "RE_E3"
+      bus: 28         # Near southern tie-line exit (Line_32, Line_33)
+      max_mw: 150
+      weight: 0.23
+
+# === Fault configurations for IEEE 39 ===
+# Selected to activate different constraint types across both areas
+fault_configs:
+  - name: "bus4_ct10"
+    bus: 4
+    clear_time: 0.10
+    description: "WEST load center, near northern tie line Line_8"
+  - name: "bus14_ct10"
+    bus: 14
+    clear_time: 0.10
+    description: "EAST bus, inter-area junction point"
+  - name: "bus16_ct10"
+    bus: 16
+    clear_time: 0.10
+    description: "EAST hub bus, tie line Line_21 endpoint"
+  - name: "bus26_ct10"
+    bus: 26
+    clear_time: 0.10
+    description: "WEST bus, near southern tie lines"
+  - name: "bus20_ct15"
+    bus: 20
+    clear_time: 0.15
+    description: "EAST largest load (680 MW)"
+  - name: "bus8_ct15"
+    bus: 8
+    clear_time: 0.15
+    description: "WEST major load (522 MW)"
+  - name: "bus4_ct25"
+    bus: 4
+    clear_time: 0.25
+    description: "WEST severe fault (long clearing time)"
+  - name: "bus16_ct25"
+    bus: 16
+    clear_time: 0.25
+    description: "EAST severe fault (long clearing time)"
+  - name: "gen_trip_g4"
+    type: "gen_trip"
+    gen: "GENROU_4"
+    description: "EAST large unit trip (652 MW)"
+
+# === Scenario spaces ===
+scenario_spaces:
+  # 7D parameter space focused on RE distribution effects
+  # re_west_fraction is the KEY parameter creating distribution-dependent limits
+  7d:
+    dimensions:
+      - name: "re_penetration"
+        type: "continuous"
+        bounds: [0.0, 0.60]
+        description: "RE share of total generation (0=none, 0.6=60%)"
+      - name: "re_west_fraction"
+        type: "continuous"
+        bounds: [0.0, 1.0]
+        description: "Fraction of RE capacity in WEST (0=all EAST, 1=all WEST, 0.5=balanced)"
+      - name: "re_dispatch_west"
+        type: "continuous"
+        bounds: [0.3, 1.0]
+        description: "WEST RE output factor (weather/availability)"
+      - name: "re_dispatch_east"
+        type: "continuous"
+        bounds: [0.3, 1.0]
+        description: "EAST RE output factor (weather/availability)"
+      - name: "load_level_west"
+        type: "continuous"
+        bounds: [0.80, 1.20]
+        description: "WEST area load scaling (seasonal/daily)"
+      - name: "load_level_east"
+        type: "continuous"
+        bounds: [0.80, 1.20]
+        description: "EAST area load scaling (seasonal/daily)"
+      - name: "gen_dispatch"
+        type: "categorical"
+        values: [0, 1, 2, 3]
+        labels: ["uniform", "west_heavy", "east_heavy", "peak"]
+        bounds: [0.0, 1.0]
+        description: "Synchronous gen dispatch pattern (0=uniform, 1=WEST-heavy, 2=EAST-heavy, 3=peak)"
+
+  # Extended 10D space with per-generator scaling (for detailed analysis)
+  10d:
+    dimensions:
+      - name: "re_penetration"
+        type: "continuous"
+        bounds: [0.0, 0.60]
+      - name: "re_west_fraction"
+        type: "continuous"
+        bounds: [0.0, 1.0]
+      - name: "load_level_west"
+        type: "continuous"
+        bounds: [0.80, 1.20]
+      - name: "load_level_east"
+        type: "continuous"
+        bounds: [0.80, 1.20]
+      - name: "gen_west_scale"
+        type: "continuous"
+        bounds: [0.50, 1.10]
+        description: "WEST synchronous gen scaling (all 5 units)"
+      - name: "gen_east_scale"
+        type: "continuous"
+        bounds: [0.50, 1.10]
+        description: "EAST synchronous gen scaling (all 5 units)"
+      - name: "fault_bus"
+        type: "categorical"
+        values: [4, 8, 14, 16, 20, 26]
+        bounds: [0.0, 1.0]
+      - name: "clear_time"
+        type: "continuous"
+        bounds: [0.05, 0.25]
+      - name: "line_trip"
+        type: "categorical"
+        values: ["none", "Line_8", "Line_18", "Line_32", "Line_33"]
+        bounds: [0.0, 1.0]
+      - name: "gen_trip"
+        type: "categorical"
+        values: ["none", "GENROU_4", "GENROU_6", "GENROU_9"]
+        bounds: [0.0, 1.0]

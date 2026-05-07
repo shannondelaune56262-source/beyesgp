@@ -148,6 +148,14 @@ def main():
             improvement = (method_limit - uniform_limit) / uniform_limit * 100
             row[f"{method}_improvement_pct"] = improvement
 
+        # Decompose total improvement into clustering vs AIA geometry
+        sigmoid_val = row["sigmoid_limit"]
+        aia_val = row["aia_limit"]
+        clustering_pct = (sigmoid_val - uniform_limit) / uniform_limit * 100
+        aia_geometry_pct = (aia_val - sigmoid_val) / uniform_limit * 100
+        row["clustering_contribution_pct"] = clustering_pct
+        row["aia_geometry_contribution_pct"] = aia_geometry_pct
+
         comparison_rows.append(row)
 
     comp_df = pd.DataFrame(comparison_rows)
@@ -158,11 +166,20 @@ def main():
     logger.info(comp_df.to_string())
 
     # Weighted average improvement
+    weights = comp_df["n_samples"].values
     for method in ["linear", "sigmoid", "aia"]:
-        weights = comp_df["n_samples"].values
         improvements = comp_df[f"{method}_improvement_pct"].values
         weighted_avg = np.average(improvements, weights=weights)
         logger.info(f"  {method} weighted avg improvement: {weighted_avg:+.1f}%")
+
+    # Decomposition summary
+    clustering_wavg = np.average(comp_df["clustering_contribution_pct"].values, weights=weights)
+    aia_geo_wavg = np.average(comp_df["aia_geometry_contribution_pct"].values, weights=weights)
+    total_wavg = clustering_wavg + aia_geo_wavg
+    logger.info(f"\n=== Improvement Decomposition ===")
+    logger.info(f"  Clustering (sigmoid vs uniform): {clustering_wavg:+.1f}%")
+    logger.info(f"  AIA geometry (AIA vs sigmoid):   {aia_geo_wavg:+.1f}%")
+    logger.info(f"  Total (AIA vs uniform):          {total_wavg:+.1f}%")
 
     logger.info(f"\nResults saved to {output_dir}")
     logger.info("=== Transfer Limits Computation Complete ===")
